@@ -72,7 +72,7 @@ public abstract class Grapher extends ApplicationFrame implements
             data.addSeries(s);
         }
         final JFreeChart chart = ChartFactory.createXYLineChart(name + "Graph",
-                "time", name + " of Energy", data, PlotOrientation.VERTICAL,
+                "time", name, data, PlotOrientation.VERTICAL,
                 true, true, false);
 
         final ChartPanel chartPanel = new ChartPanel(chart);
@@ -98,7 +98,7 @@ public abstract class Grapher extends ApplicationFrame implements
     }
 
     public static class StepConsumptionGrapher extends Grapher {
-        private static final String STEPCONS = "Step consumption";
+        private static final String STEPCONS = "Step consumption of energy";
 
         public StepConsumptionGrapher() {
             super(STEPCONS);
@@ -112,7 +112,7 @@ public abstract class Grapher extends ApplicationFrame implements
     }
 
     public static class TotalComsumptionGrapher extends Grapher {
-        private static final String STEPCONS = "Total consumption";
+        private static final String STEPCONS = "Total consumption of energy";
 
         public TotalComsumptionGrapher() {
             super(STEPCONS);
@@ -127,7 +127,7 @@ public abstract class Grapher extends ApplicationFrame implements
     }
 
     public static class BufferLevelGrapher extends Grapher {
-        private static final String STEPCONS = "Buffer Level";
+        private static final String STEPCONS = "Buffer Level of resources";
 
         public BufferLevelGrapher() {
             super(STEPCONS);

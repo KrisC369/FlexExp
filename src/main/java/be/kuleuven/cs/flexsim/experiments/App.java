@@ -17,8 +17,8 @@ public class App {
         int numberOfVariations = 8;
         for (int i = 0; i < numberOfVariations; i++) {
             apps.add(new App());
-            apps.get(i).addGrapher(new Grapher.BufferLevelGrapher());
-//            apps.get(i).addGrapher(new Grapher.StepConsumptionGrapher());
+//            apps.get(i).addGrapher(new Grapher.BufferLevelGrapher());
+            apps.get(i).addGrapher(new Grapher.StepConsumptionGrapher());
 //            apps.get(i).addGrapher(new Grapher.TotalComsumptionGrapher());
             apps.get(i).configureCurtailable(i);
             apps.get(i).init();
