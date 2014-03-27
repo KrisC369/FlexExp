@@ -22,6 +22,11 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.9.5</version>
+		</dependency>
+		<dependency>
 			<groupId>be.kuleuven.cs.gridlock</groupId>
 			<artifactId>gridlock-events</artifactId>
 			<version>0.0.1</version>
@@ -66,6 +71,46 @@
 					</descriptorRefs>
 				</configuration>
 			</plugin>
+            <!-- <plugin>
+				<groupId>com.github.wvengen</groupId>
+				<artifactId>proguard-maven-plugin</artifactId>
+				<version>2.0.6</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>proguard</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<proguardVersion>4.8</proguardVersion>
+					<obfuscate>true</obfuscate>
+					<options>
+						<option>-target 1.6</option>
+						<option>-keep public class
+                            be.kuleuven.cs.flexsim.experiments.App**</option>
+                        <option>-dontskipnonpubliclibraryclasses</option>
+                        <option>-keepclassmembers enum * {public static **[] values(); public static ** valueOf(java.lang.String);}</option>
+                    </options>
+					<maxMemory>1024m</maxMemory>
+					<injar>${project.build.finalName}-jar-with-dependencies.jar</injar>
+					<outjar>${project.build.finalName}-proguard.jar</outjar>
+					<outputDirectory>${project.build.directory}</outputDirectory>
+					<proguardInclude>${basedir}/proguard.conf</proguardInclude>
+					<libs>
+						<lib>${java.home}/lib/rt.jar</lib>
+					</libs>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>net.sf.proguard</groupId>
+						<artifactId>proguard-base</artifactId>
+						<version>4.9</version>   
+						<scope>runtime</scope>
+					</dependency>
+				</dependencies>
+            </plugin> -->
 		</plugins>
 	</build>
 </project>

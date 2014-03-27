@@ -6,10 +6,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.annotation.Nullable;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.data.general.SeriesChangeEvent;
+import org.jfree.data.general.SeriesChangeListener;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.ApplicationFrame;
@@ -73,12 +78,11 @@ public abstract class Grapher extends ApplicationFrame implements
         final ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
         setContentPane(chartPanel);
-
         pack();
         RefineryUtilities.centerFrameOnScreen(this);
         setVisible(true);
     }
-    
+
     /**
      * @return the series
      */
@@ -132,10 +136,10 @@ public abstract class Grapher extends ApplicationFrame implements
         @Override
         protected void record(Event e) {
             int t = e.getAttribute("time", Integer.class);
-            for(Entry<String,Object> es: e.getAttributes().entrySet()){
-                if(es.getKey().contains("buffer")){
+            for (Entry<String, Object> es : e.getAttributes().entrySet()) {
+                if (es.getKey().contains("buffer")) {
                     Long value = e.getAttribute(es.getKey(), Long.class);
-                    addRecord(es.getKey(),t, value);
+                    addRecord(es.getKey(), t, value);
                 }
             }
         }

@@ -1,6 +1,7 @@
 package be.kuleuven.cs.flexsim.view;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -9,7 +10,8 @@ import be.kuleuven.cs.gridlock.simulation.events.Event;
 
 public class GrapherTest {
 
-    protected GrapherTester g;
+    //mock for nonnull check.
+    protected GrapherTester g = mock(GrapherTester.class);
 
     @Before
     public void setUp() throws Exception {
