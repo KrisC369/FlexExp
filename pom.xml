@@ -60,7 +60,16 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
+                <executions>
+                            <execution>
+                                <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                                <phase>package</phase> <!-- bind to the packaging phase -->
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                            </execution>
+                </executions>
+                <configuration>
 					<archive>
 						<manifest>
 							<mainClass>be.kuleuven.cs.flexsim.experiments.App</mainClass>
@@ -106,7 +115,7 @@
 					<dependency>
 						<groupId>net.sf.proguard</groupId>
 						<artifactId>proguard-base</artifactId>
-						<version>4.9</version>   
+						<version>4.9</version>
 						<scope>runtime</scope>
 					</dependency>
 				</dependencies>
