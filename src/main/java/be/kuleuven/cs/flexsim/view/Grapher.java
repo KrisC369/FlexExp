@@ -6,15 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.annotation.Nullable;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.data.general.SeriesChangeEvent;
-import org.jfree.data.general.SeriesChangeListener;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.ApplicationFrame;
@@ -66,21 +61,22 @@ public abstract class Grapher extends ApplicationFrame implements
         series.get(idx).add(x, y);
     }
 
-    public void drawChart() {
-        final XYSeriesCollection data = new XYSeriesCollection();
-        for (XYSeries s : series) {
-            data.addSeries(s);
-        }
-        final JFreeChart chart = ChartFactory.createXYLineChart(name + "Graph",
-                "time", name, data, PlotOrientation.VERTICAL,
-                true, true, false);
-
-        final ChartPanel chartPanel = new ChartPanel(chart);
+    public void drawSingleChart() {
+        final ChartPanel chartPanel = new ChartPanel(createChart());
         chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
         setContentPane(chartPanel);
         pack();
         RefineryUtilities.centerFrameOnScreen(this);
         setVisible(true);
+    }
+
+    public JFreeChart createChart() {
+        final XYSeriesCollection data = new XYSeriesCollection();
+        for (XYSeries s : series) {
+            data.addSeries(s);
+        }
+        return ChartFactory.createXYLineChart(name + "Graph", "time", name,
+                data, PlotOrientation.VERTICAL, true, true, false);
     }
 
     /**

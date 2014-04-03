@@ -8,23 +8,26 @@ import be.kuleuven.cs.flexsim.domain.resource.ResourceFactory;
 import be.kuleuven.cs.flexsim.simulation.SimulationComponent;
 import be.kuleuven.cs.flexsim.simulation.SimulationContext;
 import be.kuleuven.cs.flexsim.simulation.Simulator;
+import be.kuleuven.cs.flexsim.view.GraphAggregatorView;
 import be.kuleuven.cs.flexsim.view.Grapher;
 
 public class App {
 
     public static void main(String[] args) {
         List<App> apps = new ArrayList<>();
+        GraphAggregatorView agg = new GraphAggregatorView();
         int numberOfVariations = 8;
         for (int i = 0; i < numberOfVariations; i++) {
             apps.add(new App());
-//            apps.get(i).addGrapher(new Grapher.BufferLevelGrapher());
-            apps.get(i).addGrapher(new Grapher.StepConsumptionGrapher());
-//            apps.get(i).addGrapher(new Grapher.TotalComsumptionGrapher());
+            apps.get(i).addGrapher(agg, new Grapher.BufferLevelGrapher());
+            // apps.get(i).addGrapher(new Grapher.StepConsumptionGrapher());
+            // apps.get(i).addGrapher(new Grapher.TotalComsumptionGrapher());
             apps.get(i).configureCurtailable(i);
             apps.get(i).init();
             apps.get(i).start();
             apps.get(i).post();
         }
+        agg.draw();
     }
 
     private Simulator s;
@@ -33,13 +36,14 @@ public class App {
 
     public App() {
         s = Simulator.createSimulator(2000);
-        //p = ProductionLine.createStaticCurtailableLayout();
+        // p = ProductionLine.createStaticCurtailableLayout();
         p = buildLine();
         graphs = new ArrayList<>();
     }
 
     private ProductionLine buildLine() {
-       return new ProductionLine.ProductionLineBuilder().addShifted(7).addCurtailableShifted(7).addShifted(3).build();
+        return new ProductionLine.ProductionLineBuilder().addShifted(7)
+                .addCurtailableShifted(7).addShifted(3).build();
     }
 
     public void configureCurtailable(final int numberOfCurtInstances) {
@@ -73,9 +77,10 @@ public class App {
         });
     }
 
-    public void addGrapher(Grapher g) {
+    public void addGrapher(GraphAggregatorView agg, Grapher g) {
         s.register(g);
         graphs.add(g);
+        agg.addGrapher(g);
     }
 
     public void init() {
@@ -93,8 +98,8 @@ public class App {
     }
 
     public void post() {
-        for (Grapher gs : graphs) {
-            gs.drawChart();
-        }
+        // for (Grapher gs : graphs) {
+        // gs.drawSingleChart();
+        // }
     }
 }
