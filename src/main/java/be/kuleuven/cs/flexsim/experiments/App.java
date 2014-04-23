@@ -1,9 +1,13 @@
 package be.kuleuven.cs.flexsim.experiments;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import be.kuleuven.cs.flexsim.domain.factory.ProductionLine;
+import be.kuleuven.cs.flexsim.domain.finances.FinanceTracker;
 import be.kuleuven.cs.flexsim.domain.resource.ResourceFactory;
 import be.kuleuven.cs.flexsim.simulation.SimulationComponent;
 import be.kuleuven.cs.flexsim.simulation.SimulationContext;
@@ -20,7 +24,8 @@ public class App {
         for (int i = 0; i < numberOfVariations; i++) {
             apps.add(new App());
             apps.get(i).addGrapher(agg, new Grapher.BufferLevelGrapher());
-            // apps.get(i).addGrapher(new Grapher.StepConsumptionGrapher());
+            // apps.get(i).addGrapher(agg, new
+            // Grapher.StepConsumptionGrapher());
             // apps.get(i).addGrapher(new Grapher.TotalComsumptionGrapher());
             apps.get(i).configureCurtailable(i);
             apps.get(i).init();
@@ -33,21 +38,25 @@ public class App {
     private Simulator s;
     private ProductionLine p;
     private List<Grapher> graphs;
+    private FinanceTracker ft;
 
     public App() {
         s = Simulator.createSimulator(2000);
         // p = ProductionLine.createStaticCurtailableLayout();
         p = buildLine();
+        ft = FinanceTracker.createDefault(p);
         graphs = new ArrayList<>();
     }
 
     private ProductionLine buildLine() {
         return new ProductionLine.ProductionLineBuilder().addShifted(7)
-                .addCurtailableShifted(7).addShifted(3).build();
+                .addShifted(7).addShifted(3)
+                .addMultiCapExponentialConsuming(1, 12).build();
     }
 
     public void configureCurtailable(final int numberOfCurtInstances) {
         s.register(p);
+        s.register(ft);
         s.register(new SimulationComponent() {
             int ticks = 0;
             boolean curt = false;
@@ -57,22 +66,33 @@ public class App {
             }
 
             @Override
-            public void tick() {
+            public void tick(int t) {
                 ticks++;
             }
 
             @Override
-            public void afterTick() {
+            public void afterTick(int t) {
                 if (ticks >= 200 && !curt) {
-                    if (numberOfCurtInstances > p.getCurtailableStations()
-                            .size())
-                        throw new IllegalArgumentException(
-                                "Cannot curtail more stations than the amount that allows curtailment.");
-                    for (int i = 0; i < numberOfCurtInstances; i++) {
-                        p.getCurtailableStations().get(i).doFullCurtailment();
-                    }
+                    // if (numberOfCurtInstances > p.getCurtailableStations()
+                    // .size())
+                    // throw new IllegalArgumentException(
+                    // "Cannot curtail more stations than the amount that allows curtailment.");
+                    // for (int i = 0; i < numberOfCurtInstances; i++) {
+                    // p.getCurtailableStations().get(i).doFullCurtailment();
+                    // }
+                    p.getCurtailableStations()
+                            .get(0)
+                            .setSpeedVsEConsumptionRatio(numberOfCurtInstances,
+                                    true);
+
                     curt = true;
                 }
+            }
+
+            @Override
+            public @Nonnull
+            List<SimulationComponent> getSimulationSubComponents() {
+                return Collections.emptyList();
             }
         });
     }
@@ -89,8 +109,8 @@ public class App {
         // 2));
         // p.deliverResources(ResourceFactory.createBulkMPResource(60,0, 1, 2,
         // 3));
-        p.deliverResources(ResourceFactory.createBulkMPResource(1000, 0, 2, 2,
-                2));
+        p.deliverResources(ResourceFactory.createBulkMPResource(10000, 0, 2, 2,
+                2, 20));
     }
 
     public void start() {

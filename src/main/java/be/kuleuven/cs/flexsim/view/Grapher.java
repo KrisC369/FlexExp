@@ -102,7 +102,7 @@ public abstract class Grapher extends ApplicationFrame implements
 
         protected void record(Event e) {
             int t = e.getAttribute("time", Integer.class);
-            long y = e.getAttribute("totalLaststepE", Long.class);
+            long y = e.getAttribute("totalLaststepE", Integer.class);
             addRecord(STEPCONS, t, y);
         }
     }
