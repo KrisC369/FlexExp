@@ -19,20 +19,25 @@ public class App {
 
     public static void main(String[] args) {
         List<App> apps = new ArrayList<>();
-        GraphAggregatorView agg = new GraphAggregatorView();
+        GraphAggregatorView agg1 = new GraphAggregatorView();
+        GraphAggregatorView agg2 = new GraphAggregatorView();
+        GraphAggregatorView agg3 = new GraphAggregatorView();
+
         int numberOfVariations = 8;
         for (int i = 0; i < numberOfVariations; i++) {
             apps.add(new App());
-            apps.get(i).addGrapher(agg, new Grapher.BufferLevelGrapher());
-            // apps.get(i).addGrapher(agg, new
-            // Grapher.StepConsumptionGrapher());
-            // apps.get(i).addGrapher(new Grapher.TotalComsumptionGrapher());
+            apps.get(i).addGrapher(agg1, new Grapher.BufferLevelGrapher());
+            apps.get(i).addGrapher(agg2, new Grapher.StepConsumptionGrapher());
+            apps.get(i).addGrapher(agg3, new Grapher.TotalComsumptionGrapher());
             apps.get(i).configureCurtailable(i);
             apps.get(i).init();
             apps.get(i).start();
             apps.get(i).post();
         }
-        agg.draw();
+        agg1.draw();
+        agg2.draw();
+        agg3.draw();
+        agg3.print();
     }
 
     private Simulator s;
@@ -41,7 +46,7 @@ public class App {
     private FinanceTracker ft;
 
     public App() {
-        s = Simulator.createSimulator(2000);
+        s = Simulator.createSimulator(2500);
         // p = ProductionLine.createStaticCurtailableLayout();
         p = buildLine();
         ft = FinanceTracker.createDefault(p);
@@ -50,8 +55,8 @@ public class App {
 
     private ProductionLine buildLine() {
         return new ProductionLine.ProductionLineBuilder().addShifted(7)
-                .addShifted(7).addShifted(3)
-                .addMultiCapExponentialConsuming(1, 12).build();
+                .addShifted(7).addShifted(4)
+                .addMultiCapExponentialConsuming(1, 100).build();
     }
 
     public void configureCurtailable(final int numberOfCurtInstances) {
@@ -82,8 +87,8 @@ public class App {
                     // }
                     p.getCurtailableStations()
                             .get(0)
-                            .setSpeedVsEConsumptionRatio(numberOfCurtInstances,
-                                    true);
+                            .setSpeedVsEConsumptionRatio(
+                                    numberOfCurtInstances * 5, true);
 
                     curt = true;
                 }
@@ -110,7 +115,7 @@ public class App {
         // p.deliverResources(ResourceFactory.createBulkMPResource(60,0, 1, 2,
         // 3));
         p.deliverResources(ResourceFactory.createBulkMPResource(10000, 0, 2, 2,
-                2, 20));
+                2, 200));
     }
 
     public void start() {

@@ -15,6 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.jfree.chart.ChartPanel;
+import org.jfree.data.xy.XYSeries;
 import org.jfree.ui.ApplicationFrame;
 
 public class GraphAggregatorView extends ApplicationFrame {
@@ -119,5 +120,16 @@ public class GraphAggregatorView extends ApplicationFrame {
         // setContentPane(chartPanel);
 
         // /////////////////////
+    }
+
+    public void print() {
+        for (Grapher g : graphs) {
+            System.out.println(g.getTitle() + ":");
+            for (XYSeries l : g.getSeries()) {
+                System.out.println(l.getMaxY());
+
+            }
+        }
+
     }
 }
