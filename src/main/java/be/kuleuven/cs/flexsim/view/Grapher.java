@@ -119,6 +119,20 @@ public abstract class Grapher extends ApplicationFrame implements
             long y = e.getAttribute("totalTotalE", Integer.class);
             addRecord(STEPCONS, t, y);
         }
+    }
+
+    public static class TotalProfitGrapher extends Grapher {
+        private static final String STEPCONS = "Total Profit (reward-cost)";
+
+        public TotalProfitGrapher() {
+            super(STEPCONS);
+        }
+
+        protected void record(Event e) {
+            int t = e.getAttribute("time", Integer.class);
+            long y = e.getAttribute("totalProfitM", Integer.class);
+            addRecord(STEPCONS, t, y);
+        }
 
     }
 
