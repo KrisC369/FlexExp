@@ -1,24 +1,27 @@
 package be.kuleuven.cs.flexsim.experiments;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-
-import javax.annotation.Nonnull;
 
 import be.kuleuven.cs.flexsim.domain.factory.ProductionLine;
 import be.kuleuven.cs.flexsim.domain.finances.FinanceTracker;
 import be.kuleuven.cs.flexsim.domain.resource.ResourceFactory;
-import be.kuleuven.cs.flexsim.simulation.SimulationComponent;
-import be.kuleuven.cs.flexsim.simulation.SimulationContext;
+import be.kuleuven.cs.flexsim.events.SimEventFactory;
 import be.kuleuven.cs.flexsim.simulation.Simulator;
 import be.kuleuven.cs.flexsim.view.GraphAggregatorView;
 import be.kuleuven.cs.flexsim.view.Grapher;
 
-public class App {
+/**
+ * Runs an experiment with multipe stations on a productionline with one curtail
+ * (steer) event on a exponentialConsuming steerable station.
+ * 
+ * @author Kristof Coninx <kristof.coninx AT cs.kuleuven.be>
+ * 
+ */
+public class MultiStationExponentialConsExp {
 
     public static void main(String[] args) {
-        List<App> apps = new ArrayList<>();
+        List<MultiStationExponentialConsExp> apps = new ArrayList<>();
         GraphAggregatorView agg1 = new GraphAggregatorView();
         GraphAggregatorView agg2 = new GraphAggregatorView();
         GraphAggregatorView agg3 = new GraphAggregatorView();
@@ -26,14 +29,14 @@ public class App {
 
         int numberOfVariations = 8;
         for (int i = 0; i < numberOfVariations; i++) {
-            apps.add(new App());
+            apps.add(new MultiStationExponentialConsExp());
             apps.get(i).addGrapher(agg1, new Grapher.BufferLevelGrapher());
             apps.get(i).addGrapher(agg2, new Grapher.StepConsumptionGrapher());
             apps.get(i).addGrapher(agg3, new Grapher.TotalComsumptionGrapher());
             apps.get(i).addGrapher(agg4, new Grapher.TotalProfitGrapher());
 
-            apps.get(i).configureCurtailable(i);
             apps.get(i).init();
+            apps.get(i).configureCurtailable(i);
             apps.get(i).start();
             apps.get(i).post();
         }
@@ -51,9 +54,8 @@ public class App {
     private List<Grapher> graphs;
     private FinanceTracker ft;
 
-    public App() {
+    public MultiStationExponentialConsExp() {
         s = Simulator.createSimulator(4000);
-        // p = ProductionLine.createStaticCurtailableLayout();
         p = buildLine();
         ft = FinanceTracker.createDefault(p);
         graphs = new ArrayList<>();
@@ -63,52 +65,12 @@ public class App {
         return new ProductionLine.ProductionLineBuilder().addShifted(7)
                 .addShifted(7).addShifted(4)
                 .addMultiCapExponentialConsuming(1, 50).build();
-        // return new ProductionLine.ProductionLineBuilder()
-        // .addMultiCapExponentialConsuming(1, 50).build();
     }
 
     public void configureCurtailable(final int numberOfCurtInstances) {
-        s.register(p);
-        s.register(ft);
-        s.register(new SimulationComponent() {
-            int ticks = 0;
-            boolean curt = false;
+        SimEventFactory fac = new SimEventFactory(s, p);
+        fac.controlStationFavorSpeed(200, numberOfCurtInstances);
 
-            @Override
-            public void initialize(SimulationContext context) {
-            }
-
-            @Override
-            public void tick(int t) {
-                ticks++;
-            }
-
-            @Override
-            public void afterTick(int t) {
-                if (ticks >= 200 && !curt) {
-                    // if (numberOfCurtInstances > p.getCurtailableStations()
-                    // .size())
-                    // throw new IllegalArgumentException(
-                    // "Cannot curtail more stations than the amount that allows curtailment.");
-                    // for (int i = 0; i < numberOfCurtInstances; i++) {
-                    // p.getCurtailableStations().get(i).doFullCurtailment();
-                    // }
-                    p.getSteerableStations()
-                            .get(0)
-                            .favorSpeedOverFixedEConsumption(
-                                    numberOfCurtInstances * 800,
-                                    numberOfCurtInstances * 10);
-
-                    curt = true;
-                }
-            }
-
-            @Override
-            public @Nonnull
-            List<SimulationComponent> getSimulationSubComponents() {
-                return Collections.emptyList();
-            }
-        });
     }
 
     public void addGrapher(GraphAggregatorView agg, Grapher g) {
@@ -118,13 +80,10 @@ public class App {
     }
 
     public void init() {
-        // p.deliverResources(ResourceFactory.createBulkMPResource(60,0, 3, 1));
-        // p.deliverResources(ResourceFactory.createBulkMPResource(60,0, 2, 3,
-        // 2));
+        s.register(p);
+        s.register(ft);
         p.deliverResources(ResourceFactory.createBulkMPResource(10000, 0, 2, 2,
                 2, 1000));
-        // p.deliverResources(ResourceFactory.createBulkMPResource(10000, 0,
-        // 1000));
     }
 
     public void start() {
@@ -132,8 +91,5 @@ public class App {
     }
 
     public void post() {
-        // for (Grapher gs : graphs) {
-        // gs.drawSingleChart();
-        // }
     }
 }
