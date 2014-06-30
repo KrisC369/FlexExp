@@ -136,4 +136,31 @@ public abstract class SimEvent {
             }
         }
     }
+
+    static final class StationSteerHighCurtail extends SimEvent {
+
+        protected StationSteerHighCurtail(Simulator s, ProductionLine pline,
+                int timetick) {
+            super(s, pline, timetick);
+        }
+
+        @Override
+        protected void doEventAction() {
+            getPline().getDualModeStations().get(0).signalHighConsumption();
+
+        }
+    }
+
+    static final class StationSteerLowCurtail extends SimEvent {
+
+        protected StationSteerLowCurtail(Simulator s, ProductionLine pline,
+                int timetick) {
+            super(s, pline, timetick);
+        }
+
+        @Override
+        protected void doEventAction() {
+            getPline().getDualModeStations().get(0).signalLowConsumption();
+        }
+    }
 }

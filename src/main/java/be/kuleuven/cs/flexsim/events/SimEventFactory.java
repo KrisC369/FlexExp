@@ -82,4 +82,30 @@ public class SimEventFactory {
         e.register();
         return e;
     }
+
+    /**
+     * Create an event that fully curtails a station.
+     * 
+     * @param trigger
+     *            The timestep to trigger this event at.
+     * @return the event instance that will be fired.
+     */
+    public SimEvent setHigh(int trigger) {
+        SimEvent e = new SimEvent.StationSteerHighCurtail(s, p, trigger);
+        e.register();
+        return e;
+    }
+
+    /**
+     * Create an event that fully curtails a station.
+     * 
+     * @param trigger
+     *            The timestep to trigger this event at.
+     * @return the event instance that will be fired.
+     */
+    public SimEvent setLow(int trigger) {
+        SimEvent e = new SimEvent.StationSteerLowCurtail(s, p, trigger);
+        e.register();
+        return e;
+    }
 }

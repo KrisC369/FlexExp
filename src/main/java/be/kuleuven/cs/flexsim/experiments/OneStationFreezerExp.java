@@ -11,10 +11,10 @@ import be.kuleuven.cs.flexsim.simulation.Simulator;
 import be.kuleuven.cs.flexsim.view.GraphAggregatorView;
 import be.kuleuven.cs.flexsim.view.Grapher;
 
-public class OneStationExponentialConsMulitpleEvts {
+public class OneStationFreezerExp {
 
     public static void main(String[] args) {
-        List<OneStationExponentialConsMulitpleEvts> apps = new ArrayList<>();
+        List<OneStationFreezerExp> apps = new ArrayList<>();
         GraphAggregatorView agg1 = new GraphAggregatorView();
         GraphAggregatorView agg2 = new GraphAggregatorView();
         GraphAggregatorView agg3 = new GraphAggregatorView();
@@ -22,11 +22,12 @@ public class OneStationExponentialConsMulitpleEvts {
 
         int numberOfVariations = 8;
         for (int i = 0; i < numberOfVariations; i++) {
-            apps.add(new OneStationExponentialConsMulitpleEvts());
-            apps.get(i).addGrapher(agg1, new Grapher.BufferLevelGrapher());
+            apps.add(new OneStationFreezerExp());
+            // apps.get(i).addGrapher(agg1, new Grapher.BufferLevelGrapher());
             apps.get(i).addGrapher(agg2, new Grapher.StepConsumptionGrapher());
-            apps.get(i).addGrapher(agg3, new Grapher.TotalComsumptionGrapher());
-            apps.get(i).addGrapher(agg4, new Grapher.TotalProfitGrapher());
+            // apps.get(i).addGrapher(agg3, new
+            // Grapher.TotalComsumptionGrapher());
+            // apps.get(i).addGrapher(agg4, new Grapher.TotalProfitGrapher());
 
             apps.get(i).init();
             apps.get(i).configureCurtailable(i);
@@ -47,7 +48,7 @@ public class OneStationExponentialConsMulitpleEvts {
     private List<Grapher> graphs;
     private FinanceTracker ft;
 
-    public OneStationExponentialConsMulitpleEvts() {
+    public OneStationFreezerExp() {
         s = Simulator.createSimulator(4000);
         // p = ProductionLine.createStaticCurtailableLayout();
         p = buildLine();
@@ -57,19 +58,19 @@ public class OneStationExponentialConsMulitpleEvts {
 
     private ProductionLine buildLine() {
         return new ProductionLine.ProductionLineBuilder()
-                .addMultiCapExponentialConsuming(1, 50).build();
+                .addRFSteerableStation(1, 50).build();
     }
 
     public void configureCurtailable(final int numberOfCurtInstances) {
         SimEventFactory fac = new SimEventFactory(s, p);
         // fac.controlStationFavorSpeed(1, numberOfCurtInstances);
-
-        fac.controlStationFavorSpeed(200, numberOfCurtInstances);
-        fac.controlStationFavorConsumption(400, numberOfCurtInstances);
-        fac.controlStationFavorSpeed(600, numberOfCurtInstances);
-        fac.controlStationFavorConsumption(800, numberOfCurtInstances);
-        fac.controlStationFavorSpeed(1000, numberOfCurtInstances);
-        fac.controlStationFavorConsumption(1200, numberOfCurtInstances);
+        fac.setHigh(200);
+        fac.setLow(400);
+        fac.setHigh(600);
+        fac.setLow(800);
+        fac.setHigh(1000);
+        fac.setLow(1200);
+        fac.setHigh(1400);
     }
 
     public void addGrapher(GraphAggregatorView agg, Grapher g) {
@@ -81,7 +82,7 @@ public class OneStationExponentialConsMulitpleEvts {
     public void init() {
         s.register(p);
         s.register(ft);
-        p.deliverResources(ResourceFactory.createBulkMPResource(100000, 1000));
+        p.deliverResources(ResourceFactory.createBulkMPResource(100000, 80));
     }
 
     public void start() {

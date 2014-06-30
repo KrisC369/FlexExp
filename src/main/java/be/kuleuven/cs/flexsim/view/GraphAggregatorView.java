@@ -126,7 +126,7 @@ public class GraphAggregatorView extends ApplicationFrame {
         for (Grapher g : graphs) {
             System.out.println(g.getTitle() + ":");
             for (XYSeries l : g.getSeries()) {
-                System.out.println(l.getMaxY());
+                System.out.println(l.getY(l.getItemCount() - 1));
 
             }
         }
