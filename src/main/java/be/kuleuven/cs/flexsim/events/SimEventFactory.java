@@ -15,7 +15,7 @@ public class SimEventFactory {
     /**
      * The fixed scaling factor for consumption shift units.
      */
-    public final static int CONSUMPTIONSHIFT = 800;
+    public final static int CONSUMPTIONSHIFT = 100; // 800 prev.
     /**
      * The fixed scaling factor for production shift units.
      */

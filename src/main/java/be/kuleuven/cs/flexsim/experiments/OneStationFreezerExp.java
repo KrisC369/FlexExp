@@ -58,7 +58,8 @@ public class OneStationFreezerExp {
 
     private ProductionLine buildLine() {
         return new ProductionLine.ProductionLineBuilder()
-                .addRFSteerableStation(1, 50).build();
+                .setRfHighConsumption(500).setRfLowConsumption(300)
+                .setRfWidth(100).addRFSteerableStation(1, 50).build();
     }
 
     public void configureCurtailable(final int numberOfCurtInstances) {

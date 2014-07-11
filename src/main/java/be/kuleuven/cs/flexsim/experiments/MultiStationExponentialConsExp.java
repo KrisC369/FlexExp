@@ -55,7 +55,7 @@ public class MultiStationExponentialConsExp {
     private FinanceTracker ft;
 
     public MultiStationExponentialConsExp() {
-        s = Simulator.createSimulator(4000);
+        s = Simulator.createSimulator(12000);
         p = buildLine();
         ft = FinanceTracker.createDefault(p);
         graphs = new ArrayList<>();
@@ -64,13 +64,17 @@ public class MultiStationExponentialConsExp {
     private ProductionLine buildLine() {
         return new ProductionLine.ProductionLineBuilder().addShifted(7)
                 .addShifted(7).addShifted(4)
-                .addMultiCapExponentialConsuming(1, 50).build();
+                .addMultiCapExponentialConsuming(2, 50)
+                .addRFSteerableStation(2, 50).build();
     }
 
     public void configureCurtailable(final int numberOfCurtInstances) {
         SimEventFactory fac = new SimEventFactory(s, p);
-        fac.controlStationFavorSpeed(200, numberOfCurtInstances);
-
+        fac.controlStationFavorSpeed(1000, numberOfCurtInstances);
+        fac.setHigh(500);
+        fac.setLow(1000);
+        fac.setHigh(2500);
+        fac.setLow(3800);
     }
 
     public void addGrapher(GraphAggregatorView agg, Grapher g) {
@@ -83,7 +87,7 @@ public class MultiStationExponentialConsExp {
         s.register(p);
         s.register(ft);
         p.deliverResources(ResourceFactory.createBulkMPResource(10000, 0, 2, 2,
-                2, 1000));
+                2, 1000, 100));
     }
 
     public void start() {
