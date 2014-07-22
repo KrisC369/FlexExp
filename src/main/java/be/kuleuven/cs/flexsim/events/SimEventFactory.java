@@ -1,6 +1,6 @@
 package be.kuleuven.cs.flexsim.events;
 
-import be.kuleuven.cs.flexsim.domain.factory.ProductionLine;
+import be.kuleuven.cs.flexsim.domain.process.ProductionLine;
 import be.kuleuven.cs.flexsim.simulation.Simulator;
 
 /**

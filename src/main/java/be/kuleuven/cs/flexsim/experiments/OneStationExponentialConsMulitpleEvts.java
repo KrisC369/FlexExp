@@ -3,8 +3,8 @@ package be.kuleuven.cs.flexsim.experiments;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.kuleuven.cs.flexsim.domain.factory.ProductionLine;
-import be.kuleuven.cs.flexsim.domain.finances.FinanceTracker;
+import be.kuleuven.cs.flexsim.domain.finance.FinanceTracker;
+import be.kuleuven.cs.flexsim.domain.process.ProductionLine;
 import be.kuleuven.cs.flexsim.domain.resource.ResourceFactory;
 import be.kuleuven.cs.flexsim.events.SimEventFactory;
 import be.kuleuven.cs.flexsim.simulation.Simulator;

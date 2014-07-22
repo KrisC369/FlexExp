@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import be.kuleuven.cs.flexsim.domain.factory.ProductionLine;
+import be.kuleuven.cs.flexsim.domain.process.ProductionLine;
 import be.kuleuven.cs.flexsim.simulation.SimulationComponent;
 import be.kuleuven.cs.flexsim.simulation.SimulationContext;
 import be.kuleuven.cs.flexsim.simulation.Simulator;
@@ -50,8 +50,7 @@ public abstract class SimEvent {
             }
 
             @Override
-            public @Nonnull
-            List<SimulationComponent> getSimulationSubComponents() {
+            public @Nonnull List<SimulationComponent> getSimulationSubComponents() {
                 return Collections.emptyList();
             }
         });

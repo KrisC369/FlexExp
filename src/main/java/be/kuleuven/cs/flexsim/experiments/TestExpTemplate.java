@@ -3,8 +3,10 @@ package be.kuleuven.cs.flexsim.experiments;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.kuleuven.cs.flexsim.domain.factory.ProductionLine;
-import be.kuleuven.cs.flexsim.domain.finances.FinanceTracker;
+import javax.swing.JFrame;
+
+import be.kuleuven.cs.flexsim.domain.finance.FinanceTracker;
+import be.kuleuven.cs.flexsim.domain.process.ProductionLine;
 import be.kuleuven.cs.flexsim.domain.resource.ResourceFactory;
 import be.kuleuven.cs.flexsim.events.SimEventFactory;
 import be.kuleuven.cs.flexsim.simulation.Simulator;
@@ -40,6 +42,8 @@ public class TestExpTemplate {
 
         agg3.print();
         agg4.print();
+
+        visualise(apps.get(0).p);
     }
 
     private Simulator s;
@@ -73,6 +77,17 @@ public class TestExpTemplate {
         s.register(g);
         graphs.add(g);
         agg.addGrapher(g);
+    }
+
+    private static void visualise(ProductionLine p2) {
+        LayoutPane lp = new LayoutPane(p2);
+        lp.init();
+        JFrame frame = new JFrame();
+        frame.getContentPane().add(lp);
+        frame.setTitle("JGraphT Adapter to JGraph Demo");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
     }
 
     public void init() {
