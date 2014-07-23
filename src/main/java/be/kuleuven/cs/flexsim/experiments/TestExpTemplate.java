@@ -12,6 +12,7 @@ import be.kuleuven.cs.flexsim.events.SimEventFactory;
 import be.kuleuven.cs.flexsim.simulation.Simulator;
 import be.kuleuven.cs.flexsim.view.GraphAggregatorView;
 import be.kuleuven.cs.flexsim.view.Grapher;
+import be.kuleuven.cs.flexsim.view.ProcessLayout;
 
 public class TestExpTemplate {
 
@@ -80,7 +81,7 @@ public class TestExpTemplate {
     }
 
     private static void visualise(ProductionLine p2) {
-        LayoutPane lp = new LayoutPane(p2);
+        ProcessLayout lp = new ProcessLayout(p2);
         lp.init();
         JFrame frame = new JFrame();
         frame.getContentPane().add(lp);

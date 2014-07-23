@@ -1,4 +1,4 @@
-package be.kuleuven.cs.flexsim.experiments;
+package be.kuleuven.cs.flexsim.view;
 
 import java.awt.Dimension;
 
@@ -15,7 +15,11 @@ import com.mxgraph.layout.mxCircleLayout;
 import com.mxgraph.layout.mxParallelEdgeLayout;
 import com.mxgraph.swing.mxGraphComponent;
 
-public class LayoutPane extends JApplet {
+/**
+ * @author Kristof Coninx <kristof.coninx AT cs.kuleuven.be>
+ *
+ */
+public class ProcessLayout extends JApplet {
 
     private static final long serialVersionUID = 2202072534703043194L;
     private static final Dimension DEFAULT_SIZE = new Dimension(1024, 730);
@@ -23,21 +27,22 @@ public class LayoutPane extends JApplet {
     private JGraphXAdapter<Buffer<Resource>, Workstation> jgxAdapter;
     private ProductionLine p;
 
-    public LayoutPane(ProductionLine p2) {
+    public ProcessLayout(ProductionLine p2) {
         p = p2;
+        jgxAdapter = new JGraphXAdapter<>(p.getLayout());
     }
 
     /**
      * {@inheritDoc}
      */
     public void init() {
-        jgxAdapter = new JGraphXAdapter<>(p.getLayout());
-
         getContentPane().add(new mxGraphComponent(jgxAdapter));
         resize(DEFAULT_SIZE);
 
         // positioning via jgraphx layouts
         mxCircleLayout layout = new mxCircleLayout(jgxAdapter);
+        // mxFastOrganicLayout layout = new mxFastOrganicLayout(jgxAdapter);
+        // mxParallelEdgeLayout layout = new mxParallelEdgeLayout(jgxAdapter);
         layout.execute(jgxAdapter.getDefaultParent());
 
         mxParallelEdgeLayout pe = new mxParallelEdgeLayout(jgxAdapter, 150);
