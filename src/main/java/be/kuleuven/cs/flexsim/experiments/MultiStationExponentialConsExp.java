@@ -3,7 +3,7 @@ package be.kuleuven.cs.flexsim.experiments;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.kuleuven.cs.flexsim.domain.finance.FinanceTracker;
+import be.kuleuven.cs.flexsim.domain.finance.FinanceTrackerImpl;
 import be.kuleuven.cs.flexsim.domain.process.ProductionLine;
 import be.kuleuven.cs.flexsim.domain.resource.ResourceFactory;
 import be.kuleuven.cs.flexsim.events.SimEventFactory;
@@ -52,12 +52,12 @@ public class MultiStationExponentialConsExp {
     private Simulator s;
     private ProductionLine p;
     private List<Grapher> graphs;
-    private FinanceTracker ft;
+    private FinanceTrackerImpl ft;
 
     public MultiStationExponentialConsExp() {
         s = Simulator.createSimulator(12000);
         p = buildLine();
-        ft = FinanceTracker.createDefault(p);
+        ft = FinanceTrackerImpl.createDefault(p);
         graphs = new ArrayList<>();
     }
 

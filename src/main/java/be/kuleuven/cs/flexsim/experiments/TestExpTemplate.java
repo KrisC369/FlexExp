@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
-import be.kuleuven.cs.flexsim.domain.finance.FinanceTracker;
+import be.kuleuven.cs.flexsim.domain.finance.FinanceTrackerImpl;
 import be.kuleuven.cs.flexsim.domain.process.ProductionLine;
 import be.kuleuven.cs.flexsim.domain.resource.ResourceFactory;
 import be.kuleuven.cs.flexsim.events.SimEventFactory;
@@ -50,13 +50,13 @@ public class TestExpTemplate {
     private Simulator s;
     private ProductionLine p;
     private List<Grapher> graphs;
-    private FinanceTracker ft;
+    private FinanceTrackerImpl ft;
 
     public TestExpTemplate() {
         s = Simulator.createSimulator(4000);
         // p = ProductionLine.createStaticCurtailableLayout();
         p = buildLine();
-        ft = FinanceTracker.createDefault(p);
+        ft = FinanceTrackerImpl.createDefault(p);
         graphs = new ArrayList<>();
     }
 
