@@ -154,4 +154,11 @@ public abstract class Grapher extends ApplicationFrame implements
             }
         }
     }
+
+    /**
+     * @return the name
+     */
+    final String getPaneName() {
+        return name;
+    }
 }

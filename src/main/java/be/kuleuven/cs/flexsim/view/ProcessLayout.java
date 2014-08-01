@@ -3,6 +3,7 @@ package be.kuleuven.cs.flexsim.view;
 import java.awt.Dimension;
 
 import javax.swing.JApplet;
+import javax.swing.JFrame;
 
 import org.jgrapht.ext.JGraphXAdapter;
 
@@ -48,5 +49,14 @@ public class ProcessLayout extends JApplet {
         mxParallelEdgeLayout pe = new mxParallelEdgeLayout(jgxAdapter, 150);
         pe.execute(jgxAdapter.getDefaultParent());
         // that's all there is to it!...
+    }
+
+    public void draw() {
+        JFrame frame = new JFrame();
+        frame.getContentPane().add(this);
+        frame.setTitle("JGraphT Adapter to JGraph Demo");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
     }
 }

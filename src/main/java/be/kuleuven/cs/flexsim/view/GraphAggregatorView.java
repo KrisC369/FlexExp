@@ -21,25 +21,31 @@ import org.jfree.ui.ApplicationFrame;
 public class GraphAggregatorView extends ApplicationFrame {
 
     private List<Grapher> graphs;
+    private ViewConfig viewConfig;
 
     public GraphAggregatorView() {
         super("Aggregate Graph View");
         this.graphs = new ArrayList<>();
+        this.viewConfig = new ViewConfig(new Dimension(350, 135), 3, 4);
     }
 
     public void addGrapher(Grapher g) {
         this.graphs.add(g);
     }
 
-    public void draw() {
-        final ViewConfig c = new ViewConfig(new Dimension(350, 135), 3, 4);
+    private ViewConfig getviewConfig() {
+        return viewConfig;
+    }
+
+    public JPanel getPanel() {
+        final ViewConfig c = getviewConfig();
         ChartPanel chartPanel;
-        final JPanel totalGUI = new JPanel();
         final JPanel panel = new JPanel(
                 new GridLayout(c.getLayX(), c.getLayY()));
-        final JFrame frame = new JFrame("[=] FlexSim Graphs [=]");
         for (Grapher g : graphs) {
             chartPanel = new ChartPanel(g.createChart()) {
+
+                private static final long serialVersionUID = -6487775156176874038L;
 
                 @Override
                 public Dimension getPreferredSize() {
@@ -51,10 +57,19 @@ public class GraphAggregatorView extends ApplicationFrame {
             };
             panel.add(chartPanel);
         }
+        return panel;
+
+    }
+
+    public void draw() {
+
+        final JFrame frame = new JFrame("[=] FlexSim Graphs [=]");
+        final JPanel panel = getPanel();
+        final JPanel totalGUI = new JPanel();
         totalGUI.add(panel);
         totalGUI.setAutoscrolls(true);
 
-        frame.setContentPane(totalGUI);
+        frame.setContentPane(getPanel());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationByPlatform(true);
         frame.pack();
@@ -70,7 +85,8 @@ public class GraphAggregatorView extends ApplicationFrame {
             public void componentResized(@Nullable ComponentEvent e) {
                 if (e != null) {
                     try {
-                        c.setDimension(((JFrame) e.getSource()).getSize());
+                        getviewConfig().setDimension(
+                                ((JFrame) e.getSource()).getSize());
                     } catch (ClassCastException ex) {
                         Logger.getLogger(this.getClass().toString()).log(
                                 Level.WARNING,
@@ -98,28 +114,6 @@ public class GraphAggregatorView extends ApplicationFrame {
             }
         });
 
-        // //////////////////////// /////
-        //
-        // final CombinedDomainXYPlot plot = new CombinedDomainXYPlot(new
-        // NumberAxis("Domain"));
-        // plot.setGap(10.0);
-        //
-        // // add the subplots...
-        // for(Grapher g : graphs){
-        // plot.add(g.createXYPlot(), 1);
-        // }
-        // plot.setOrientation(PlotOrientation.VERTICAL);
-        //
-        // // return a new chart containing the overlaid plot...
-        // new JFreeChart("CombinedDomainXYPlot Demo",
-        // JFreeChart.DEFAULT_TITLE_FONT, plot, true);
-        // ChartPanel chartPanel = new ChartPanel(new
-        // JFreeChart("CombinedDomainXYPlot Demo",
-        // JFreeChart.DEFAULT_TITLE_FONT, plot, true));
-        // chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
-        // setContentPane(chartPanel);
-
-        // /////////////////////
     }
 
     public void print() {
@@ -131,5 +125,13 @@ public class GraphAggregatorView extends ApplicationFrame {
             }
         }
 
+    }
+
+    public String getViewTitle() {
+        String res = "";
+        if (graphs.size() > 0) {
+            res += graphs.get(0).getPaneName();
+        }
+        return res;
     }
 }

@@ -10,6 +10,9 @@ import be.kuleuven.cs.flexsim.events.SimEventFactory;
 import be.kuleuven.cs.flexsim.simulation.Simulator;
 import be.kuleuven.cs.flexsim.view.GraphAggregatorView;
 import be.kuleuven.cs.flexsim.view.Grapher;
+import be.kuleuven.cs.flexsim.view.TabbedUI;
+
+import com.google.common.collect.Lists;
 
 public class OneStationFreezerExp {
 
@@ -23,24 +26,24 @@ public class OneStationFreezerExp {
         int numberOfVariations = 8;
         for (int i = 0; i < numberOfVariations; i++) {
             apps.add(new OneStationFreezerExp());
-            // apps.get(i).addGrapher(agg1, new Grapher.BufferLevelGrapher());
+            apps.get(i).addGrapher(agg1, new Grapher.BufferLevelGrapher());
             apps.get(i).addGrapher(agg2, new Grapher.StepConsumptionGrapher());
-            // apps.get(i).addGrapher(agg3, new
-            // Grapher.TotalComsumptionGrapher());
-            // apps.get(i).addGrapher(agg4, new Grapher.TotalProfitGrapher());
+            apps.get(i).addGrapher(agg3, new Grapher.TotalComsumptionGrapher());
+            apps.get(i).addGrapher(agg4, new Grapher.TotalProfitGrapher());
 
             apps.get(i).init();
             apps.get(i).configureCurtailable(i);
             apps.get(i).start();
             apps.get(i).post();
         }
-        agg1.draw();
-        agg2.draw();
-        agg3.draw();
-        agg4.draw();
+        drawUI(agg1, agg2, agg3, agg4);
 
         agg3.print();
         agg4.print();
+    }
+
+    private static void drawUI(GraphAggregatorView... agg1) {
+        new TabbedUI(Lists.newArrayList(agg1)).draw();
     }
 
     private Simulator s;

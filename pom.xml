@@ -44,7 +44,7 @@
 		<dependency>
 			<groupId>be.kuleuven.cs</groupId>
 			<artifactId>flexsim-core</artifactId>
-			<version>0.0.3-SNAPSHOT</version>
+			<version>0.0.4-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<build>
