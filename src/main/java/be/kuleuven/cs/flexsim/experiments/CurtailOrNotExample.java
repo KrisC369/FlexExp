@@ -17,6 +17,7 @@ import be.kuleuven.cs.flexsim.simulation.Simulator;
 import be.kuleuven.cs.flexsim.view.GraphAggregatorView;
 import be.kuleuven.cs.flexsim.view.Grapher;
 import be.kuleuven.cs.flexsim.view.ProcessLayout;
+import be.kuleuven.cs.flexsim.view.Tabbable;
 import be.kuleuven.cs.flexsim.view.TabbedUI;
 
 import com.google.common.collect.Lists;
@@ -50,15 +51,15 @@ public class CurtailOrNotExample {
             app.start();
             app.post();
         }
-        drawUI(agg1, agg2, agg3, agg4);
+        drawUI(agg1, agg2, agg3, agg4,
+                new ProcessLayout(apps.get(0).pls.get(0)));
 
         agg3.print();
         agg4.print();
 
-        visualise(apps.get(0).pls.get(0));
     }
 
-    private static void drawUI(GraphAggregatorView... agg1) {
+    private static void drawUI(Tabbable... agg1) {
         new TabbedUI(Lists.newArrayList(agg1)).draw();
 
     }
@@ -86,12 +87,6 @@ public class CurtailOrNotExample {
         s.register(g);
         graphs.add(g);
         aggv.addGrapher(g);
-    }
-
-    private static void visualise(ProductionLine p2) {
-        ProcessLayout lp = new ProcessLayout(p2);
-        lp.init();
-        lp.draw();
     }
 
     public void init() {

@@ -13,6 +13,7 @@ import be.kuleuven.cs.flexsim.simulation.Simulator;
 import be.kuleuven.cs.flexsim.view.GraphAggregatorView;
 import be.kuleuven.cs.flexsim.view.Grapher;
 import be.kuleuven.cs.flexsim.view.ProcessLayout;
+import be.kuleuven.cs.flexsim.view.Tabbable;
 import be.kuleuven.cs.flexsim.view.TabbedUI;
 
 import com.google.common.collect.Lists;
@@ -47,7 +48,7 @@ public class TestExpTemplate {
         visualise(apps.get(0).p);
     }
 
-    private static void drawUI(GraphAggregatorView... agg1) {
+    private static void drawUI(Tabbable... agg1) {
 
         new TabbedUI(Lists.newArrayList(agg1)).draw();
     }

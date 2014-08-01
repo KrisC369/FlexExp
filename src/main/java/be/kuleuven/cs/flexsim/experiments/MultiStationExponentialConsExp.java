@@ -10,6 +10,8 @@ import be.kuleuven.cs.flexsim.events.SimEventFactory;
 import be.kuleuven.cs.flexsim.simulation.Simulator;
 import be.kuleuven.cs.flexsim.view.GraphAggregatorView;
 import be.kuleuven.cs.flexsim.view.Grapher;
+import be.kuleuven.cs.flexsim.view.ProcessLayout;
+import be.kuleuven.cs.flexsim.view.Tabbable;
 import be.kuleuven.cs.flexsim.view.TabbedUI;
 
 import com.google.common.collect.Lists;
@@ -43,13 +45,13 @@ public class MultiStationExponentialConsExp {
             apps.get(i).start();
             apps.get(i).post();
         }
-        drawUI(agg1, agg2, agg3, agg4);
+        drawUI(agg1, agg2, agg3, agg4, new ProcessLayout(apps.get(0).p));
 
         agg3.print();
         agg4.print();
     }
 
-    private static void drawUI(GraphAggregatorView... agg1) {
+    private static void drawUI(Tabbable... agg1) {
         new TabbedUI(Lists.newArrayList(agg1)).draw();
 
     }

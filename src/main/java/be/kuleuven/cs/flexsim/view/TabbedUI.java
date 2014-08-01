@@ -13,19 +13,19 @@ import com.google.common.collect.Lists;
 public class TabbedUI extends JTabbedPane {
 
     private static final long serialVersionUID = 2765705584434479523L;
-    private List<GraphAggregatorView> views;
+    private List<Tabbable> views;
 
-    public TabbedUI(Iterable<GraphAggregatorView> panels) {
+    public TabbedUI(Iterable<Tabbable> panels) {
         this.views = Lists.newArrayList(panels);
 
     }
 
     public void draw() {
         final JTabbedPane tabbedPane = new JTabbedPane();
-        for (GraphAggregatorView p : views) {
+        for (Tabbable p : views) {
 
             tabbedPane.addTab(p.getViewTitle(), null, p.getPanel(),
-                    "Shows the " + p.getName() + " pane.");
+                    "Shows the " + p.getViewTitle() + " pane.");
         }
 
         final JFrame frame = new JFrame("[=] FlexSim Graphs [=]");
@@ -44,7 +44,7 @@ public class TabbedUI extends JTabbedPane {
             @Override
             public void componentResized(@Nullable ComponentEvent e) {
                 if (e != null) {
-                    for (GraphAggregatorView p : views) {
+                    for (Tabbable p : views) {
                         for (ComponentListener cl : p.getPanel()
                                 .getComponentListeners()) {
                             cl.componentResized(e);

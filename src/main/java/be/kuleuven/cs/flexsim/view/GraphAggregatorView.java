@@ -18,7 +18,7 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.ui.ApplicationFrame;
 
-public class GraphAggregatorView extends ApplicationFrame {
+public class GraphAggregatorView extends ApplicationFrame implements Tabbable {
 
     private List<Grapher> graphs;
     private ViewConfig viewConfig;
@@ -37,6 +37,10 @@ public class GraphAggregatorView extends ApplicationFrame {
         return viewConfig;
     }
 
+    /* (non-Javadoc)
+     * @see be.kuleuven.cs.flexsim.view.Tabbable#getPanel()
+     */
+    @Override
     public JPanel getPanel() {
         final ViewConfig c = getviewConfig();
         ChartPanel chartPanel;
@@ -127,6 +131,10 @@ public class GraphAggregatorView extends ApplicationFrame {
 
     }
 
+    /* (non-Javadoc)
+     * @see be.kuleuven.cs.flexsim.view.Tabbable#getViewTitle()
+     */
+    @Override
     public String getViewTitle() {
         String res = "";
         if (graphs.size() > 0) {

@@ -10,6 +10,7 @@ import be.kuleuven.cs.flexsim.events.SimEventFactory;
 import be.kuleuven.cs.flexsim.simulation.Simulator;
 import be.kuleuven.cs.flexsim.view.GraphAggregatorView;
 import be.kuleuven.cs.flexsim.view.Grapher;
+import be.kuleuven.cs.flexsim.view.Tabbable;
 import be.kuleuven.cs.flexsim.view.TabbedUI;
 
 import com.google.common.collect.Lists;
@@ -42,7 +43,7 @@ public class OneStationExponentialConsMulitpleEvts {
         agg4.print();
     }
 
-    private static void drawUI(GraphAggregatorView... agg1) {
+    private static void drawUI(Tabbable... agg1) {
         new TabbedUI(Lists.newArrayList(agg1)).draw();
 
     }
