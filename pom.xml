@@ -93,7 +93,7 @@
                 <configuration>
 					<archive>
 						<manifest>
-							<mainClass>be.kuleuven.cs.flexsim.experiments.BigScenExp</mainClass>
+							<mainClass>be.kuleuven.cs.flexsim.experiments.MultiStationExponentialConsExp</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
