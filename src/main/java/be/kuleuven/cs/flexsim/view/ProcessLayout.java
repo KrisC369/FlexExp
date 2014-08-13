@@ -33,7 +33,7 @@ import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
 public class ProcessLayout extends JApplet implements Tabbable {
 
     private static final long serialVersionUID = 2202072534703043194L;
-    private static final Dimension DEFAULT_SIZE = new Dimension(1024, 730);
+    private static final Dimension DEFAULT_SIZE = new Dimension(1680, 1024);
 
     private Layout<Buffer<Resource>, Workstation> layout;
     private String name;
