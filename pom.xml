@@ -93,7 +93,7 @@
                 <configuration>
 					<archive>
 						<manifest>
-							<mainClass>be.kuleuven.cs.flexsim.experiments.App</mainClass>
+							<mainClass>be.kuleuven.cs.flexsim.experiments.BigScenExp</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>

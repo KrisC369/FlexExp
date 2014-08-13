@@ -40,7 +40,7 @@ public class TestExpTemplate {
             apps.get(i).start();
             apps.get(i).post();
         }
-        drawUI(agg1, agg2, agg3, agg4);
+        drawUI(agg1, agg2, agg3, agg4, new ProcessLayout(apps.get(0).p));
 
         agg3.print();
         agg4.print();
