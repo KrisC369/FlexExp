@@ -18,15 +18,16 @@ import be.kuleuven.cs.flexsim.simulation.Simulator;
 import be.kuleuven.cs.flexsim.view.GraphAggregatorView;
 import be.kuleuven.cs.flexsim.view.Grapher;
 import be.kuleuven.cs.flexsim.view.ProcessLayout;
+import be.kuleuven.cs.flexsim.view.TSOSteersignalGrapher;
 import be.kuleuven.cs.flexsim.view.Tabbable;
 import be.kuleuven.cs.flexsim.view.TabbedUI;
 
 import com.google.common.collect.Lists;
 
-public class CurtailOrNotExample {
+public class TsoExample {
 
     public static void main(String[] args) {
-        List<CurtailOrNotExample> apps = new ArrayList<>();
+        List<TsoExample> apps = new ArrayList<>();
         GraphAggregatorView agg1 = new GraphAggregatorView();
         GraphAggregatorView agg2 = new GraphAggregatorView();
         GraphAggregatorView agg3 = new GraphAggregatorView();
@@ -34,26 +35,27 @@ public class CurtailOrNotExample {
 
         // int numberOfVariations = 8;
         // for (int i = 0; i < numberOfVariations; i++) {
-        apps.add(new CurtailOrNotExample(true));
+        apps.add(new TsoExample(true));
         apps.get(0).addGrapher(agg1, new Grapher.BufferLevelGrapher());
         apps.get(0).addGrapher(agg2, new Grapher.StepConsumptionGrapher());
         apps.get(0).addGrapher(agg3, new Grapher.TotalComsumptionGrapher());
         apps.get(0).addGrapher(agg4, new Grapher.TotalProfitGrapher());
 
-        apps.add(new CurtailOrNotExample(false));
+        apps.add(new TsoExample(false));
         apps.get(1).addGrapher(agg1, new Grapher.BufferLevelGrapher());
         apps.get(1).addGrapher(agg2, new Grapher.StepConsumptionGrapher());
         apps.get(1).addGrapher(agg3, new Grapher.TotalComsumptionGrapher());
         apps.get(1).addGrapher(agg4, new Grapher.TotalProfitGrapher());
 
-        for (CurtailOrNotExample app : apps) {
+        Tabbable tsot = agg1;
+        for (TsoExample app : apps) {
             app.init();
             // c.configureCurtailable(i);
             app.start();
             app.post();
         }
         drawUI(agg1, agg2, agg3, agg4,
-                new ProcessLayout(apps.get(0).pls.get(0)));
+                new ProcessLayout(apps.get(0).pls.get(0)), apps.get(0).tsot);
 
         agg3.print();
         agg4.print();
@@ -74,8 +76,9 @@ public class CurtailOrNotExample {
     private FinanceTracker ft;
     private boolean curtail;
     private CopperPlateTSO tso;
+    private Tabbable tsot;
 
-    public CurtailOrNotExample(boolean curtail) {
+    public TsoExample(boolean curtail) {
         this.curtail = curtail;
         s = Simulator.createSimulator(4000);
         // p = ProductionLine.createStaticCurtailableLayout();
@@ -125,30 +128,32 @@ public class CurtailOrNotExample {
         // FinanceTrackerImpl t3 = FinanceTrackerImpl.createDefault(line3);
         // FinanceTrackerImpl t4 = FinanceTrackerImpl.createDefault(line4);
 
-        // Site site1 = new SiteImpl(line1, line2);
-        Site site2 = new SiteImpl(line1, line2, line3, line4);
-        FinanceTrackerImpl t3 = FinanceTrackerImpl.createDefault(site2);
-        // FinanceTrackerImpl t4 = FinanceTrackerImpl.createDefault(site2);
-        // ft = FinanceTrackerImpl.createAggregate(t3, t4);
+        Site site1 = new SiteImpl(line1, line2);
+        Site site2 = new SiteImpl(line3, line4);
+        FinanceTrackerImpl t3 = FinanceTrackerImpl.createDefault(site1);
+        FinanceTrackerImpl t4 = FinanceTrackerImpl.createDefault(site2);
+        ft = FinanceTrackerImpl.createAggregate(t3, t4);
 
-        SteeringSignal tso;
+        SteeringSignal ss;
         if (curtail) {
-            tso = new RandomTSO(-30, 70, s.getRandom());
+            ss = new RandomTSO(-3000, 1000, s.getRandom());
         } else {
-            tso = new RandomTSO(0, 1, s.getRandom());
+            ss = new RandomTSO(0, 1, s.getRandom());
         }
-
+        tso = new CopperPlateTSO(16000, ss, site1, site2);
         agg = new AggregatorImpl(tso, 15);
-        // agg.registerClient(site1);
+        agg.registerClient(site1);
         agg.registerClient(site2);
+        tsot = new TSOSteersignalGrapher(tso);
 
         s.register(agg);
+        s.register(tso);
         s.register(site2);
         s.register(site2);
         // s.register(t1);
         // s.register(t2);
         s.register(t3);
-        // s.register(t4);
+        s.register(t4);
 
         pls.add(line1);
         pls.add(line2);
