@@ -93,7 +93,7 @@
                 <configuration>
 					<archive>
 						<manifest>
-							<mainClass>be.kuleuven.cs.flexsim.experiments.MultiStationExponentialConsExp</mainClass>
+							<mainClass>be.kuleuven.cs.flexsim.experiments.TsoExample</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>

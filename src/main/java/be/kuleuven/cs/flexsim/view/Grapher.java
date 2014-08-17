@@ -102,8 +102,12 @@ public abstract class Grapher extends ApplicationFrame implements
 
         protected void record(Event e) {
             int t = e.getAttribute("time", Integer.class);
-            long y = e.getAttribute("totalLaststepE", Integer.class);
-            addRecord(STEPCONS, t, y);
+            for (Entry<String, Object> es : e.getAttributes().entrySet()) {
+                if (es.getKey().contains("totalLaststepE")) {
+                    long y = e.getAttribute(es.getKey(), Integer.class);
+                    addRecord(es.getKey(), t, y);
+                }
+            }
         }
     }
 
@@ -116,8 +120,12 @@ public abstract class Grapher extends ApplicationFrame implements
 
         protected void record(Event e) {
             int t = e.getAttribute("time", Integer.class);
-            long y = e.getAttribute("totalTotalE", Integer.class);
-            addRecord(STEPCONS, t, y);
+            for (Entry<String, Object> es : e.getAttributes().entrySet()) {
+                if (es.getKey().contains("totalTotalE")) {
+                    long y = e.getAttribute(es.getKey(), Integer.class);
+                    addRecord(es.getKey(), t, y);
+                }
+            }
         }
     }
 
@@ -130,8 +138,12 @@ public abstract class Grapher extends ApplicationFrame implements
 
         protected void record(Event e) {
             int t = e.getAttribute("time", Integer.class);
-            long y = e.getAttribute("totalProfitM", Integer.class);
-            addRecord(STEPCONS, t, y);
+            for (Entry<String, Object> es : e.getAttributes().entrySet()) {
+                if (es.getKey().contains("totalProfitM")) {
+                    long y = e.getAttribute(es.getKey(), Integer.class);
+                    addRecord(es.getKey(), t, y);
+                }
+            }
         }
 
     }

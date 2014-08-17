@@ -80,7 +80,7 @@ public class TsoExample {
 
     public TsoExample(boolean curtail) {
         this.curtail = curtail;
-        s = Simulator.createSimulator(4000);
+        s = Simulator.createSimulator(8000);
         // p = ProductionLine.createStaticCurtailableLayout();
         graphs = new ArrayList<>();
         pls = Lists.newArrayList();
@@ -114,14 +114,14 @@ public class TsoExample {
                 .addCurtailableShifted(5).addConsuming(3).build();
         ResourceFactory.createBulkMPResource(50, 3, 3, 3, 3, 3, 3);
 
-        line1.deliverResources(ResourceFactory.createBulkMPResource(3000, 3, 3,
-                3, 3));
+        line1.deliverResources(ResourceFactory.createBulkMPResource(3000, 4, 4,
+                4, 4));
         line2.deliverResources(ResourceFactory.createBulkMPResource(3000, 3, 3,
                 3, 3));
-        line3.deliverResources(ResourceFactory.createBulkMPResource(3000, 3, 3,
-                3, 3));
-        line4.deliverResources(ResourceFactory.createBulkMPResource(3000, 3, 3,
-                3, 3));
+        line3.deliverResources(ResourceFactory.createBulkMPResource(3000, 5, 5,
+                5, 5));
+        line4.deliverResources(ResourceFactory.createBulkMPResource(3000, 4, 3,
+                3, 4));
 
         // FinanceTrackerImpl t1 = FinanceTrackerImpl.createDefault(line1);
         // FinanceTrackerImpl t2 = FinanceTrackerImpl.createDefault(line2);
@@ -136,7 +136,7 @@ public class TsoExample {
 
         SteeringSignal ss;
         if (curtail) {
-            ss = new RandomTSO(-3000, 1000, s.getRandom());
+            ss = new RandomTSO(-300, 100, s.getRandom());
         } else {
             ss = new RandomTSO(0, 1, s.getRandom());
         }
