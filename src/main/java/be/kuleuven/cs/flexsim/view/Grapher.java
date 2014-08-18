@@ -22,7 +22,8 @@ import be.kuleuven.cs.gridlock.simulation.events.Event;
 import com.google.common.eventbus.Subscribe;
 
 public abstract class Grapher extends ApplicationFrame implements
-        InstrumentationComponent {
+        InstrumentationComponent, Chartable {
+    private static final long serialVersionUID = 3631429603857719172L;
     private final List<XYSeries> series;
     private final String name;
     private final Map<String, Integer> titlemap;
@@ -70,6 +71,7 @@ public abstract class Grapher extends ApplicationFrame implements
         setVisible(true);
     }
 
+    @Override
     public JFreeChart createChart() {
         final XYSeriesCollection data = new XYSeriesCollection();
         for (XYSeries s : series) {
@@ -91,6 +93,14 @@ public abstract class Grapher extends ApplicationFrame implements
      */
     public final Map<String, Integer> getTitlemap() {
         return new HashMap<>(titlemap);
+    }
+
+    public String getChartablePaneName() {
+        return getPaneName();
+    }
+
+    public String getChartableTitle() {
+        return getTitle();
     }
 
     public static class StepConsumptionGrapher extends Grapher {

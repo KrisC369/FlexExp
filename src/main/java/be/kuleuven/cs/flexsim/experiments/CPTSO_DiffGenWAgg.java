@@ -15,6 +15,7 @@ import be.kuleuven.cs.flexsim.domain.tso.CopperPlateTSO;
 import be.kuleuven.cs.flexsim.domain.tso.RandomTSO;
 import be.kuleuven.cs.flexsim.domain.tso.SteeringSignal;
 import be.kuleuven.cs.flexsim.simulation.Simulator;
+import be.kuleuven.cs.flexsim.view.Chartable;
 import be.kuleuven.cs.flexsim.view.GraphAggregatorView;
 import be.kuleuven.cs.flexsim.view.Grapher;
 import be.kuleuven.cs.flexsim.view.ProcessLayout;
@@ -24,38 +25,40 @@ import be.kuleuven.cs.flexsim.view.TabbedUI;
 
 import com.google.common.collect.Lists;
 
-public class TsoExample {
+public class CPTSO_DiffGenWAgg {
 
     public static void main(String[] args) {
-        List<TsoExample> apps = new ArrayList<>();
+        List<CPTSO_DiffGenWAgg> apps = new ArrayList<>();
         GraphAggregatorView agg1 = new GraphAggregatorView();
         GraphAggregatorView agg2 = new GraphAggregatorView();
         GraphAggregatorView agg3 = new GraphAggregatorView();
         GraphAggregatorView agg4 = new GraphAggregatorView();
+        GraphAggregatorView agg5 = new GraphAggregatorView();
 
         // int numberOfVariations = 8;
         // for (int i = 0; i < numberOfVariations; i++) {
-        apps.add(new TsoExample(true));
+        apps.add(new CPTSO_DiffGenWAgg(true));
         apps.get(0).addGrapher(agg1, new Grapher.BufferLevelGrapher());
         apps.get(0).addGrapher(agg2, new Grapher.StepConsumptionGrapher());
         apps.get(0).addGrapher(agg3, new Grapher.TotalComsumptionGrapher());
         apps.get(0).addGrapher(agg4, new Grapher.TotalProfitGrapher());
 
-        apps.add(new TsoExample(false));
+        apps.add(new CPTSO_DiffGenWAgg(false));
         apps.get(1).addGrapher(agg1, new Grapher.BufferLevelGrapher());
         apps.get(1).addGrapher(agg2, new Grapher.StepConsumptionGrapher());
         apps.get(1).addGrapher(agg3, new Grapher.TotalComsumptionGrapher());
         apps.get(1).addGrapher(agg4, new Grapher.TotalProfitGrapher());
 
         Tabbable tsot = agg1;
-        for (TsoExample app : apps) {
+        for (CPTSO_DiffGenWAgg app : apps) {
             app.init();
-            // c.configureCurtailable(i);
             app.start();
             app.post();
         }
+        agg5.addGrapher(apps.get(0).tsot);
+        agg5.addGrapher(apps.get(1).tsot);
         drawUI(agg1, agg2, agg3, agg4,
-                new ProcessLayout(apps.get(0).pls.get(0)), apps.get(0).tsot);
+                new ProcessLayout(apps.get(0).pls.get(0)), agg5);
 
         agg3.print();
         agg4.print();
@@ -73,14 +76,14 @@ public class TsoExample {
     private List<ProductionLine> pls;
     private List<FinanceTracker> fts;
     private List<Grapher> graphs;
-    private FinanceTracker ft;
     private boolean curtail;
     private CopperPlateTSO tso;
-    private Tabbable tsot;
 
-    public TsoExample(boolean curtail) {
+    private Chartable tsot;
+
+    public CPTSO_DiffGenWAgg(boolean curtail) {
         this.curtail = curtail;
-        s = Simulator.createSimulator(8000);
+        s = Simulator.createSimulator(6200);
         // p = ProductionLine.createStaticCurtailableLayout();
         graphs = new ArrayList<>();
         pls = Lists.newArrayList();
@@ -97,22 +100,25 @@ public class TsoExample {
     public void init() {
 
         ProductionLine line1 = new ProductionLineBuilder()
-                .setWorkingConsumption(500).setIdleConsumption(20)
+                // 8000-1600
+                .setWorkingConsumption(500).setIdleConsumption(100)
                 .addConsuming(3).addCurtailableShifted(6)
                 .addCurtailableShifted(4).addConsuming(3).build();
         ProductionLine line2 = new ProductionLineBuilder()
-                .setWorkingConsumption(400).setIdleConsumption(60)
+                // 4800-2520
+                .setWorkingConsumption(400).setIdleConsumption(210)
                 .addConsuming(3).addCurtailableShifted(6)
                 .addCurtailableShifted(3).addConsuming(3).build();
         ProductionLine line3 = new ProductionLineBuilder()
-                .setWorkingConsumption(600).setIdleConsumption(10)
+                // 8400-1400
+                .setWorkingConsumption(600).setIdleConsumption(100)
                 .addConsuming(3).addCurtailableShifted(4)
                 .addCurtailableShifted(4).addConsuming(3).build();
         ProductionLine line4 = new ProductionLineBuilder()
-                .setWorkingConsumption(500).setIdleConsumption(15)
+                // 8000-2400
+                .setWorkingConsumption(500).setIdleConsumption(150)
                 .addConsuming(4).addCurtailableShifted(4)
                 .addCurtailableShifted(5).addConsuming(3).build();
-        ResourceFactory.createBulkMPResource(50, 3, 3, 3, 3, 3, 3);
 
         line1.deliverResources(ResourceFactory.createBulkMPResource(3000, 4, 4,
                 4, 4));
@@ -123,24 +129,18 @@ public class TsoExample {
         line4.deliverResources(ResourceFactory.createBulkMPResource(3000, 4, 3,
                 3, 4));
 
-        // FinanceTrackerImpl t1 = FinanceTrackerImpl.createDefault(line1);
-        // FinanceTrackerImpl t2 = FinanceTrackerImpl.createDefault(line2);
-        // FinanceTrackerImpl t3 = FinanceTrackerImpl.createDefault(line3);
-        // FinanceTrackerImpl t4 = FinanceTrackerImpl.createDefault(line4);
-
         Site site1 = new SiteImpl(line1, line2);
         Site site2 = new SiteImpl(line3, line4);
         FinanceTrackerImpl t3 = FinanceTrackerImpl.createDefault(site1);
         FinanceTrackerImpl t4 = FinanceTrackerImpl.createDefault(site2);
-        ft = FinanceTrackerImpl.createAggregate(t3, t4);
 
         SteeringSignal ss;
+        ss = new RandomTSO(-700, 300, s.getRandom());
         if (curtail) {
-            ss = new RandomTSO(-300, 100, s.getRandom());
+            tso = new CopperPlateTSO(17000, ss, site1, site2);
         } else {
-            ss = new RandomTSO(0, 1, s.getRandom());
+            tso = new CopperPlateTSO(25000, ss, site1, site2);
         }
-        tso = new CopperPlateTSO(16000, ss, site1, site2);
         agg = new AggregatorImpl(tso, 15);
         agg.registerClient(site1);
         agg.registerClient(site2);
@@ -163,7 +163,7 @@ public class TsoExample {
         // fts.add(t1);
         // fts.add(t2);
         fts.add(t3);
-        // fts.add(t4);
+        fts.add(t4);
         sites.add(site2);
         sites.add(site2);
     }

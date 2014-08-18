@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,18 +17,20 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.ui.ApplicationFrame;
 
+import com.google.common.collect.Lists;
+
 public class GraphAggregatorView extends ApplicationFrame implements Tabbable {
 
-    private List<Grapher> graphs;
+    private List<Chartable> graphs;
     private ViewConfig viewConfig;
 
     public GraphAggregatorView() {
         super("Aggregate Graph View");
-        this.graphs = new ArrayList<>();
-        this.viewConfig = new ViewConfig(new Dimension(350, 135), 3, 4);
+        this.graphs = Lists.newArrayList();
+        this.viewConfig = new ViewConfig(new Dimension(350, 350), 2, 1);
     }
 
-    public void addGrapher(Grapher g) {
+    public void addGrapher(Chartable g) {
         this.graphs.add(g);
     }
 
@@ -37,7 +38,9 @@ public class GraphAggregatorView extends ApplicationFrame implements Tabbable {
         return viewConfig;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see be.kuleuven.cs.flexsim.view.Tabbable#getPanel()
      */
     @Override
@@ -46,14 +49,13 @@ public class GraphAggregatorView extends ApplicationFrame implements Tabbable {
         ChartPanel chartPanel;
         final JPanel panel = new JPanel(
                 new GridLayout(c.getLayX(), c.getLayY()));
-        for (Grapher g : graphs) {
+        for (Chartable g : graphs) {
             chartPanel = new ChartPanel(g.createChart()) {
 
                 private static final long serialVersionUID = -6487775156176874038L;
 
                 @Override
                 public Dimension getPreferredSize() {
-                    c.getDimension();
                     return new Dimension((int) c.getDimension().getWidth()
                             / c.getLayX(), (int) c.getDimension().getHeight()
                             / c.getLayY());
@@ -121,8 +123,8 @@ public class GraphAggregatorView extends ApplicationFrame implements Tabbable {
     }
 
     public void print() {
-        for (Grapher g : graphs) {
-            System.out.println(g.getTitle() + ":");
+        for (Chartable g : graphs) {
+            System.out.println(g.getChartableTitle() + ":");
             for (XYSeries l : g.getSeries()) {
                 System.out.println(l.getY(l.getItemCount() - 1));
 
@@ -131,14 +133,16 @@ public class GraphAggregatorView extends ApplicationFrame implements Tabbable {
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see be.kuleuven.cs.flexsim.view.Tabbable#getViewTitle()
      */
     @Override
     public String getViewTitle() {
         String res = "";
         if (graphs.size() > 0) {
-            res += graphs.get(0).getPaneName();
+            res += graphs.get(0).getChartablePaneName();
         }
         return res;
     }

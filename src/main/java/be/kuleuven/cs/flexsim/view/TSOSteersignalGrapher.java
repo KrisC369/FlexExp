@@ -1,5 +1,7 @@
 package be.kuleuven.cs.flexsim.view;
 
+import java.util.List;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -13,7 +15,9 @@ import org.jfree.data.xy.XYSeriesCollection;
 import be.kuleuven.cs.flexsim.domain.tso.CopperPlateTSO;
 import be.kuleuven.cs.flexsim.domain.util.listener.Listener;
 
-public class TSOSteersignalGrapher implements Tabbable {
+import com.google.common.collect.Lists;
+
+public class TSOSteersignalGrapher implements Tabbable, Chartable {
 
     private XYSeries data;
     private int xcount;
@@ -36,6 +40,7 @@ public class TSOSteersignalGrapher implements Tabbable {
         xcount += amount;
     }
 
+    @Override
     public JFreeChart createChart() {
         final XYSeriesCollection data = new XYSeriesCollection();
         data.addSeries(this.data);
@@ -44,9 +49,14 @@ public class TSOSteersignalGrapher implements Tabbable {
     }
 
     @Override
+    public List<XYSeries> getSeries() {
+        return Lists.newArrayList(this.data);
+    }
+
+    @Override
     public JPanel getPanel() {
         final ChartPanel chartPanel = new ChartPanel(createChart());
-        chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+        chartPanel.setPreferredSize(new java.awt.Dimension(720, 1024));
         return chartPanel;
     }
 
@@ -64,4 +74,13 @@ public class TSOSteersignalGrapher implements Tabbable {
         return "TSO-Balance";
     }
 
+    @Override
+    public String getChartablePaneName() {
+        return NAME;
+    }
+
+    @Override
+    public String getChartableTitle() {
+        return NAME;
+    }
 }
