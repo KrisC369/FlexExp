@@ -24,7 +24,7 @@ public class OneStationFreezerExp {
         GraphAggregatorView agg3 = new GraphAggregatorView();
         GraphAggregatorView agg4 = new GraphAggregatorView();
 
-        int numberOfVariations = 8;
+        int numberOfVariations = 2;
         for (int i = 0; i < numberOfVariations; i++) {
             apps.add(new OneStationFreezerExp());
             apps.get(i).addGrapher(agg1, new Grapher.BufferLevelGrapher());
@@ -62,7 +62,7 @@ public class OneStationFreezerExp {
 
     private ProductionLine buildLine() {
         return new ProductionLine.ProductionLineBuilder()
-                .setRfHighConsumption(500).setRfLowConsumption(300)
+                .setRfHighConsumption(4500).setRfLowConsumption(300)
                 .setRfWidth(100).addRFSteerableStation(1, 50).build();
     }
 
@@ -70,12 +70,14 @@ public class OneStationFreezerExp {
         SimEventFactory fac = new SimEventFactory(s, p);
         // fac.controlStationFavorSpeed(1, numberOfCurtInstances);
         fac.setHigh(200);
-        fac.setLow(400);
-        fac.setHigh(600);
-        fac.setLow(800);
-        fac.setHigh(1000);
-        fac.setLow(1200);
-        fac.setHigh(1400);
+        if (numberOfCurtInstances > 0) {
+            fac.setLow(400);
+            fac.setHigh(600);
+            fac.setLow(800);
+            fac.setHigh(1000);
+            fac.setLow(1200);
+            fac.setHigh(1400);
+        }
     }
 
     public void addGrapher(GraphAggregatorView agg, Grapher g) {
