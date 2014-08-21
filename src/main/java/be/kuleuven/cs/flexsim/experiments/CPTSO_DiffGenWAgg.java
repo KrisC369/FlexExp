@@ -18,7 +18,8 @@ import be.kuleuven.cs.flexsim.simulation.Simulator;
 import be.kuleuven.cs.flexsim.view.Chartable;
 import be.kuleuven.cs.flexsim.view.GraphAggregatorView;
 import be.kuleuven.cs.flexsim.view.Grapher;
-import be.kuleuven.cs.flexsim.view.ProcessLayout;
+import be.kuleuven.cs.flexsim.view.ProcessLayoutView;
+import be.kuleuven.cs.flexsim.view.SystemLayoutView;
 import be.kuleuven.cs.flexsim.view.TSOSteersignalGrapher;
 import be.kuleuven.cs.flexsim.view.Tabbable;
 import be.kuleuven.cs.flexsim.view.TabbedUI;
@@ -57,8 +58,9 @@ public class CPTSO_DiffGenWAgg {
         }
         agg5.addGrapher(apps.get(0).tsot);
         agg5.addGrapher(apps.get(1).tsot);
+        SystemLayoutView v = new SystemLayoutView(apps.get(0).s);
         drawUI(agg1, agg2, agg3, agg4,
-                new ProcessLayout(apps.get(0).pls.get(0)), agg5);
+                new ProcessLayoutView(apps.get(0).pls.get(0)), agg5, v);
 
         agg3.print();
         agg4.print();

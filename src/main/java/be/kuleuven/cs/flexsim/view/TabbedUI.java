@@ -38,7 +38,6 @@ public class TabbedUI extends JTabbedPane {
 
             @Override
             public void componentShown(@Nullable ComponentEvent e) {
-                // TODO Auto-generated method stub
             }
 
             @Override
@@ -55,14 +54,10 @@ public class TabbedUI extends JTabbedPane {
 
             @Override
             public void componentMoved(@Nullable ComponentEvent e) {
-                // TODO Auto-generated method stub
-
             }
 
             @Override
             public void componentHidden(@Nullable ComponentEvent e) {
-                // TODO Auto-generated method stub
-
             }
         });
     }

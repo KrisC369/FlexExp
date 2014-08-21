@@ -10,6 +10,7 @@ import be.kuleuven.cs.flexsim.events.SimEventFactory;
 import be.kuleuven.cs.flexsim.simulation.Simulator;
 import be.kuleuven.cs.flexsim.view.GraphAggregatorView;
 import be.kuleuven.cs.flexsim.view.Grapher;
+import be.kuleuven.cs.flexsim.view.SystemLayoutView;
 import be.kuleuven.cs.flexsim.view.Tabbable;
 import be.kuleuven.cs.flexsim.view.TabbedUI;
 
@@ -37,7 +38,8 @@ public class OneStationFreezerExp {
             apps.get(i).start();
             apps.get(i).post();
         }
-        drawUI(agg1, agg2, agg3, agg4);
+        SystemLayoutView v = new SystemLayoutView(apps.get(0).s);
+        drawUI(agg1, agg2, agg3, agg4, v);
 
         agg3.print();
         agg4.print();

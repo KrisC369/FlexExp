@@ -12,7 +12,7 @@ import be.kuleuven.cs.flexsim.events.SimEventFactory;
 import be.kuleuven.cs.flexsim.simulation.Simulator;
 import be.kuleuven.cs.flexsim.view.GraphAggregatorView;
 import be.kuleuven.cs.flexsim.view.Grapher;
-import be.kuleuven.cs.flexsim.view.ProcessLayout;
+import be.kuleuven.cs.flexsim.view.ProcessLayoutView;
 import be.kuleuven.cs.flexsim.view.Tabbable;
 import be.kuleuven.cs.flexsim.view.TabbedUI;
 
@@ -40,7 +40,7 @@ public class TestExpTemplate {
             apps.get(i).start();
             apps.get(i).post();
         }
-        drawUI(agg1, agg2, agg3, agg4, new ProcessLayout(apps.get(0).p));
+        drawUI(agg1, agg2, agg3, agg4, new ProcessLayoutView(apps.get(0).p));
 
         agg3.print();
         agg4.print();
@@ -87,7 +87,7 @@ public class TestExpTemplate {
     }
 
     private static void visualise(ProductionLine p2) {
-        ProcessLayout lp = new ProcessLayout(p2);
+        ProcessLayoutView lp = new ProcessLayoutView(p2);
         lp.init();
         JFrame frame = new JFrame();
         frame.getContentPane().add(lp);

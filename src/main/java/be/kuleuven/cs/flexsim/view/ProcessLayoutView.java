@@ -20,17 +20,18 @@ import be.kuleuven.cs.flexsim.domain.resource.Resource;
 import be.kuleuven.cs.flexsim.domain.util.Buffer;
 import be.kuleuven.cs.flexsim.domain.workstation.CurtailableWorkstation;
 import be.kuleuven.cs.flexsim.domain.workstation.Workstation;
+import be.kuleuven.cs.flexsim.simulation.SimulationComponent;
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
-import edu.uci.ics.jung.visualization.BasicVisualizationServer;
-import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
+import edu.uci.ics.jung.visualization.VisualizationViewer;
+import edu.uci.ics.jung.visualization.control.DefaultModalGraphMouse;
 import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
 
 /**
  * @author Kristof Coninx <kristof.coninx AT cs.kuleuven.be>
  *
  */
-public class ProcessLayout extends JApplet implements Tabbable {
+public class ProcessLayoutView extends JApplet implements Tabbable {
 
     private static final long serialVersionUID = 2202072534703043194L;
     private static final Dimension DEFAULT_SIZE = new Dimension(1680, 1024);
@@ -38,7 +39,7 @@ public class ProcessLayout extends JApplet implements Tabbable {
     private Layout<Buffer<Resource>, Workstation> layout;
     private String name;
 
-    public ProcessLayout(ProductionLine p2) {
+    public ProcessLayoutView(ProductionLine p2) {
         layout = new CircleLayout<>(p2.getLayout());
         this.name = "JUNG visualisation of process layout";
     }
@@ -50,13 +51,13 @@ public class ProcessLayout extends JApplet implements Tabbable {
     }
 
     public JPanel getPanel() {
-        BasicVisualizationServer<Buffer<Resource>, Workstation> vv = new BasicVisualizationServer<>(
+        VisualizationViewer<Buffer<Resource>, Workstation> vv = new VisualizationViewer<>(
                 layout);
         vv.setPreferredSize(DEFAULT_SIZE);
-        vv.getRenderContext().setEdgeLabelTransformer(
-                new ToStringLabeller<Workstation>());
-        vv.getRenderContext().setVertexLabelTransformer(
-                new ToStringLabeller<Buffer<Resource>>());
+        // vv.getRenderContext().setEdgeLabelTransformer(
+        // new ToStringLabeller<Workstation>());
+        // vv.getRenderContext().setVertexLabelTransformer(
+        // new ToStringLabeller<Buffer<Resource>>());
 
         vv.getRenderContext().setEdgeLabelTransformer(
                 new Transformer<Workstation, String>() {
@@ -108,7 +109,7 @@ public class ProcessLayout extends JApplet implements Tabbable {
                         return new BasicStroke();
                     }
                 });
-
+        vv.setGraphMouse(new DefaultModalGraphMouse<SimulationComponent, MyEdge<SimulationComponent>>());
         return vv;
     }
 

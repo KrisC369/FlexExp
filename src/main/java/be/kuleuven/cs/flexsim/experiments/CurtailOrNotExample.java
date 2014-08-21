@@ -17,7 +17,8 @@ import be.kuleuven.cs.flexsim.domain.tso.SteeringSignal;
 import be.kuleuven.cs.flexsim.simulation.Simulator;
 import be.kuleuven.cs.flexsim.view.GraphAggregatorView;
 import be.kuleuven.cs.flexsim.view.Grapher;
-import be.kuleuven.cs.flexsim.view.ProcessLayout;
+import be.kuleuven.cs.flexsim.view.ProcessLayoutView;
+import be.kuleuven.cs.flexsim.view.SystemLayoutView;
 import be.kuleuven.cs.flexsim.view.Tabbable;
 import be.kuleuven.cs.flexsim.view.TabbedUI;
 
@@ -52,8 +53,9 @@ public class CurtailOrNotExample {
             app.start();
             app.post();
         }
+        SystemLayoutView v = new SystemLayoutView(apps.get(0).s);
         drawUI(agg1, agg2, agg3, agg4,
-                new ProcessLayout(apps.get(0).pls.get(0)));
+                new ProcessLayoutView(apps.get(0).pls.get(0)), v);
 
         agg3.print();
         agg4.print();
