@@ -27,9 +27,11 @@ public abstract class Grapher extends ApplicationFrame implements
     private final List<XYSeries> series;
     private final String name;
     private final Map<String, Integer> titlemap;
+    private final XYSeriesCollection data;
 
     public Grapher(String title) {
         super(title);
+        data = new XYSeriesCollection();
         series = new ArrayList<>();
         // series = new XYSeries(title);
         name = title;
@@ -58,6 +60,7 @@ public abstract class Grapher extends ApplicationFrame implements
         int idx = titlemap.get(title);
         if (idx >= series.size()) {
             series.add(idx, new XYSeries(title));
+            data.addSeries(series.get(idx));
         }
         series.get(idx).add(x, y);
     }
@@ -73,10 +76,10 @@ public abstract class Grapher extends ApplicationFrame implements
 
     @Override
     public JFreeChart createChart() {
-        final XYSeriesCollection data = new XYSeriesCollection();
-        for (XYSeries s : series) {
-            data.addSeries(s);
-        }
+        // final XYSeriesCollection data = new XYSeriesCollection();
+        // for (XYSeries s : series) {
+        // data.addSeries(s);
+        // }
         return ChartFactory.createXYLineChart(name + "Graph", "time", name,
                 data, PlotOrientation.VERTICAL, true, true, false);
     }

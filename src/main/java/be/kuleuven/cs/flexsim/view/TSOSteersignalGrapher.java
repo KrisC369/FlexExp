@@ -14,14 +14,18 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import be.kuleuven.cs.flexsim.domain.tso.CopperPlateTSO;
 import be.kuleuven.cs.flexsim.domain.util.listener.Listener;
+import be.kuleuven.cs.flexsim.domain.util.listener.MultiplexListener;
+import be.kuleuven.cs.flexsim.domain.util.listener.NoopListener;
 
 import com.google.common.collect.Lists;
 
-public class TSOSteersignalGrapher implements Tabbable, Chartable {
+public class TSOSteersignalGrapher implements Tabbable, Chartable,
+        RefreshTrigger {
 
     private XYSeries data;
     private int xcount;
     private final String NAME = "TSO Balance";
+    private Listener<Object> ob = NoopListener.INSTANCE;
 
     public TSOSteersignalGrapher(CopperPlateTSO tso) {
         this.data = new XYSeries(NAME);
@@ -32,8 +36,14 @@ public class TSOSteersignalGrapher implements Tabbable, Chartable {
             public void eventOccurred(Integer arg) {
                 data.add(xcount, arg);
                 increaseX(15);
+                notifyObs();
             }
+
         });
+    }
+
+    private void notifyObs() {
+        ob.eventOccurred(this);
     }
 
     private void increaseX(int amount) {
@@ -82,5 +92,10 @@ public class TSOSteersignalGrapher implements Tabbable, Chartable {
     @Override
     public String getChartableTitle() {
         return NAME;
+    }
+
+    @Override
+    public void subscribeForTrigger(Listener l) {
+        this.ob = MultiplexListener.plus(ob, l);
     }
 }

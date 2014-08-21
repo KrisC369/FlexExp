@@ -18,6 +18,7 @@ import org.apache.commons.collections15.Transformer;
 import be.kuleuven.cs.flexsim.domain.process.ProductionLine;
 import be.kuleuven.cs.flexsim.domain.resource.Resource;
 import be.kuleuven.cs.flexsim.domain.util.Buffer;
+import be.kuleuven.cs.flexsim.domain.util.listener.Listener;
 import be.kuleuven.cs.flexsim.domain.workstation.CurtailableWorkstation;
 import be.kuleuven.cs.flexsim.domain.workstation.Workstation;
 import be.kuleuven.cs.flexsim.simulation.SimulationComponent;
@@ -38,10 +39,22 @@ public class ProcessLayoutView extends JApplet implements Tabbable {
 
     private Layout<Buffer<Resource>, Workstation> layout;
     private String name;
+    private VisualizationViewer<Buffer<Resource>, Workstation> vv;
 
     public ProcessLayoutView(ProductionLine p2) {
         layout = new CircleLayout<>(p2.getLayout());
         this.name = "JUNG visualisation of process layout";
+        vv = new VisualizationViewer<>(layout);
+    }
+
+    public ProcessLayoutView(ProductionLine p2, RefreshTrigger t) {
+        this(p2);
+        t.subscribeForTrigger(new Listener<Object>() {
+            @Override
+            public void eventOccurred(Object arg) {
+                vv.repaint();
+            }
+        });
     }
 
     /**
@@ -51,13 +64,7 @@ public class ProcessLayoutView extends JApplet implements Tabbable {
     }
 
     public JPanel getPanel() {
-        VisualizationViewer<Buffer<Resource>, Workstation> vv = new VisualizationViewer<>(
-                layout);
         vv.setPreferredSize(DEFAULT_SIZE);
-        // vv.getRenderContext().setEdgeLabelTransformer(
-        // new ToStringLabeller<Workstation>());
-        // vv.getRenderContext().setVertexLabelTransformer(
-        // new ToStringLabeller<Buffer<Resource>>());
 
         vv.getRenderContext().setEdgeLabelTransformer(
                 new Transformer<Workstation, String>() {

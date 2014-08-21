@@ -7,6 +7,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Paint;
 import java.awt.Stroke;
+import java.util.Collections;
+import java.util.List;
 
 import javax.annotation.Nullable;
 import javax.swing.JApplet;
@@ -19,10 +21,12 @@ import be.kuleuven.cs.flexsim.domain.process.ProductionLine;
 import be.kuleuven.cs.flexsim.domain.site.Site;
 import be.kuleuven.cs.flexsim.domain.tso.SteeringSignal;
 import be.kuleuven.cs.flexsim.domain.workstation.CurtailableWorkstation;
+import be.kuleuven.cs.flexsim.domain.workstation.DualModeWorkstation;
 import be.kuleuven.cs.flexsim.domain.workstation.Workstation;
 import be.kuleuven.cs.flexsim.simulation.SimulationComponent;
+import be.kuleuven.cs.flexsim.simulation.SimulationContext;
 import be.kuleuven.cs.flexsim.simulation.Simulator;
-import edu.uci.ics.jung.algorithms.layout.FRLayout2;
+import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.graph.DelegateForest;
 import edu.uci.ics.jung.graph.DirectedGraph;
 import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
@@ -43,12 +47,44 @@ public class SystemLayoutView extends JApplet implements Tabbable {
     private DirectedGraph<SimulationComponent, MyEdge<SimulationComponent>> g;
     private String name;
     private Simulator context;
+    private VisualizationViewer<SimulationComponent, MyEdge<SimulationComponent>> vv;
 
     public SystemLayoutView(Simulator sim) {
         this.context = sim;
         this.g = new DirectedSparseMultigraph<SimulationComponent, MyEdge<SimulationComponent>>();
         this.name = "JUNG visualisation of system layout";
+        this.context.register(new SimulationComponent() {
+
+            @Override
+            public void initialize(SimulationContext context) {
+            }
+
+            @Override
+            public void tick(int t) {
+                if (t % 15 == 0) {
+                    refresh();
+                }
+            }
+
+            @Override
+            public List<? extends SimulationComponent> getSimulationSubComponents() {
+                return Collections.emptyList();
+            }
+
+            @Override
+            public void afterTick(int t) {
+            }
+        });
         initGraph();
+        vv = new VisualizationViewer<>(
+                new FRLayout<SimulationComponent, MyEdge<SimulationComponent>>(
+                        new DelegateForest<SimulationComponent, MyEdge<SimulationComponent>>(
+                                g)));
+    }
+
+    private void refresh() {
+        vv.repaint();
+
     }
 
     public void initGraph() {
@@ -82,10 +118,6 @@ public class SystemLayoutView extends JApplet implements Tabbable {
         // new TreeLayout<SimulationComponent, MyEdge<SimulationComponent>>(
         // new DelegateForest<SimulationComponent, MyEdge<SimulationComponent>>(
         // g), 60, 20));
-        VisualizationViewer<SimulationComponent, MyEdge<SimulationComponent>> vv = new VisualizationViewer<>(
-                new FRLayout2<SimulationComponent, MyEdge<SimulationComponent>>(
-                        new DelegateForest<SimulationComponent, MyEdge<SimulationComponent>>(
-                                g)));
         vv.setPreferredSize(DEFAULT_SIZE);
         vv.getRenderContext().setVertexLabelTransformer(
                 new Transformer<SimulationComponent, String>() {
@@ -115,8 +147,20 @@ public class SystemLayoutView extends JApplet implements Tabbable {
                     @Override
                     public Paint transform(@Nullable SimulationComponent arg0) {
                         checkNotNull(arg0);
-                        if (arg0 instanceof Workstation) {
+                        if (arg0 instanceof CurtailableWorkstation) {
+                            if (((CurtailableWorkstation) arg0).isCurtailed()) {
+                                return Color.RED;
+                            }
                             return Color.GREEN;
+                        }
+                        if (arg0 instanceof DualModeWorkstation) {
+                            if (!((DualModeWorkstation) arg0).isHigh()) {
+                                return Color.RED;
+                            }
+                            return Color.GREEN;
+                        }
+                        if (arg0 instanceof Workstation) {
+                            return Color.BLUE;
                         }
                         if (arg0 instanceof Site) {
                             return Color.YELLOW;
@@ -127,7 +171,7 @@ public class SystemLayoutView extends JApplet implements Tabbable {
                         if (arg0 instanceof ProductionLine) {
                             return Color.ORANGE;
                         }
-                        return Color.RED;
+                        return Color.GRAY;
                     }
                 });
         vv.getRenderContext().setEdgeStrokeTransformer(

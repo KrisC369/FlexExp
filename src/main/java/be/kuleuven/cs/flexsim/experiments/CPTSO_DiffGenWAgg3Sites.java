@@ -15,7 +15,6 @@ import be.kuleuven.cs.flexsim.domain.tso.CopperPlateTSO;
 import be.kuleuven.cs.flexsim.domain.tso.RandomTSO;
 import be.kuleuven.cs.flexsim.domain.tso.SteeringSignal;
 import be.kuleuven.cs.flexsim.simulation.Simulator;
-import be.kuleuven.cs.flexsim.view.Chartable;
 import be.kuleuven.cs.flexsim.view.GraphAggregatorView;
 import be.kuleuven.cs.flexsim.view.Grapher;
 import be.kuleuven.cs.flexsim.view.ProcessLayoutView;
@@ -26,10 +25,11 @@ import be.kuleuven.cs.flexsim.view.TabbedUI;
 
 import com.google.common.collect.Lists;
 
-public class CopyOfCPTSO_DiffGenWAgg3Sites {
+public class CPTSO_DiffGenWAgg3Sites {
+    private static final boolean REALTIME_UI = false;
 
     public static void main(String[] args) {
-        List<CopyOfCPTSO_DiffGenWAgg3Sites> apps = new ArrayList<>();
+        List<CPTSO_DiffGenWAgg3Sites> apps = new ArrayList<>();
         GraphAggregatorView agg1 = new GraphAggregatorView();
         GraphAggregatorView agg2 = new GraphAggregatorView();
         GraphAggregatorView agg3 = new GraphAggregatorView();
@@ -38,30 +38,44 @@ public class CopyOfCPTSO_DiffGenWAgg3Sites {
 
         // int numberOfVariations = 8;
         // for (int i = 0; i < numberOfVariations; i++) {
-        apps.add(new CopyOfCPTSO_DiffGenWAgg3Sites(true));
+        apps.add(new CPTSO_DiffGenWAgg3Sites(true));
         apps.get(0).addGrapher(agg1, new Grapher.BufferLevelGrapher());
         apps.get(0).addGrapher(agg2, new Grapher.StepConsumptionGrapher());
         apps.get(0).addGrapher(agg3, new Grapher.TotalComsumptionGrapher());
         apps.get(0).addGrapher(agg4, new Grapher.TotalProfitGrapher());
 
-        apps.add(new CopyOfCPTSO_DiffGenWAgg3Sites(false));
+        apps.add(new CPTSO_DiffGenWAgg3Sites(false));
         apps.get(1).addGrapher(agg1, new Grapher.BufferLevelGrapher());
         apps.get(1).addGrapher(agg2, new Grapher.StepConsumptionGrapher());
         apps.get(1).addGrapher(agg3, new Grapher.TotalComsumptionGrapher());
         apps.get(1).addGrapher(agg4, new Grapher.TotalProfitGrapher());
 
         Tabbable tsot = agg1;
-        for (CopyOfCPTSO_DiffGenWAgg3Sites app : apps) {
+        for (CPTSO_DiffGenWAgg3Sites app : apps) {
             app.init();
-            app.start();
-            app.post();
+            // app.start();
+            // app.post();
         }
         agg5.addGrapher(apps.get(0).tsot);
         agg5.addGrapher(apps.get(1).tsot);
         SystemLayoutView v = new SystemLayoutView(apps.get(0).s);
-        drawUI(agg1, agg2, agg3, agg4,
-                new ProcessLayoutView(apps.get(0).pls.get(0)), agg5, v);
-
+        if (REALTIME_UI) {
+            drawUI(agg1, agg2, agg3, agg4, new ProcessLayoutView(
+                    apps.get(0).pls.get(0), apps.get(0).tsot), agg5, v);
+            for (CPTSO_DiffGenWAgg3Sites app : apps) {
+                // app.init();
+                app.start();
+                app.post();
+            }
+        } else {
+            for (CPTSO_DiffGenWAgg3Sites app : apps) {
+                // app.init();
+                app.start();
+                app.post();
+            }
+            drawUI(agg1, agg2, agg3, agg4, new ProcessLayoutView(
+                    apps.get(0).pls.get(0), apps.get(0).tsot), agg5, v);
+        }
         agg3.print();
         agg4.print();
 
@@ -81,9 +95,9 @@ public class CopyOfCPTSO_DiffGenWAgg3Sites {
     private boolean curtail;
     private CopperPlateTSO tso;
 
-    private Chartable tsot;
+    private TSOSteersignalGrapher tsot;
 
-    public CopyOfCPTSO_DiffGenWAgg3Sites(boolean curtail) {
+    public CPTSO_DiffGenWAgg3Sites(boolean curtail) {
         this.curtail = curtail;
         s = Simulator.createSimulator(5200);
         // p = ProductionLine.createStaticCurtailableLayout();
@@ -103,54 +117,52 @@ public class CopyOfCPTSO_DiffGenWAgg3Sites {
 
         ProductionLine line1 = new ProductionLineBuilder()
                 // 8000-1600
-                .setWorkingConsumption(500).setIdleConsumption(100)
-                .setRfHighConsumption(800).setRfLowConsumption(400)
-                .addConsuming(3).addCurtailableShifted(6)
-                .addCurtailableShifted(4).addConsuming(3)
+                .setWorkingConsumption(350).setIdleConsumption(75)
+                .setRfHighConsumption(600).setRfLowConsumption(300)
+                .addConsuming(3).addCurtailableShifted(6).addConsuming(3)
                 .addRFSteerableStation(1, 30).build();
         ProductionLine line2 = new ProductionLineBuilder()
                 // 4800-2520
-                .setWorkingConsumption(400).setIdleConsumption(210)
-                .addConsuming(3).addCurtailableShifted(6)
-                .addCurtailableShifted(3).addConsuming(3).build();
+                .setWorkingConsumption(320).setIdleConsumption(190)
+                .addConsuming(3).addCurtailableShifted(6).addConsuming(3)
+                .build();
         ProductionLine line3 = new ProductionLineBuilder()
                 // 8400-1400
-                .setWorkingConsumption(600).setIdleConsumption(100)
-                .addConsuming(3).addCurtailableShifted(4)
-                .addCurtailableShifted(4).addConsuming(3).build();
+                .setWorkingConsumption(400).setIdleConsumption(100)
+                .addConsuming(3).addCurtailableShifted(4).addConsuming(3)
+                .build();
         ProductionLine line4 = new ProductionLineBuilder()
                 // 8000-2400
-                .setWorkingConsumption(500).setIdleConsumption(150)
-                .setRfHighConsumption(900).setRfLowConsumption(450)
-                .addConsuming(4).addCurtailableShifted(4)
-                .addCurtailableShifted(5).addConsuming(3)
+                .setWorkingConsumption(450).setIdleConsumption(150)
+                .setRfHighConsumption(500).setRfLowConsumption(250)
+                .addConsuming(4).addCurtailableShifted(4).addConsuming(3)
                 .addRFSteerableStation(1, 30).build();
 
         ProductionLine line5 = new ProductionLineBuilder()
                 // 8400-1400
-                .setWorkingConsumption(600).setIdleConsumption(100)
+                .setWorkingConsumption(500).setIdleConsumption(100)
                 .addConsuming(3).addCurtailableShifted(4)
                 .addCurtailableShifted(4).addConsuming(3).build();
         ProductionLine line6 = new ProductionLineBuilder()
                 // 8000-2400
-                .setWorkingConsumption(500).setIdleConsumption(150)
-                .setRfHighConsumption(900).setRfLowConsumption(450)
+                .setWorkingConsumption(500).setIdleConsumption(125)
+                .setRfHighConsumption(750).setRfLowConsumption(375)
                 .addConsuming(4).addCurtailableShifted(4)
-                .addCurtailableShifted(5).addConsuming(3)
+
                 .addRFSteerableStation(1, 30).build();
 
         line1.deliverResources(ResourceFactory.createBulkMPResource(3000, 4, 4,
-                4, 4, 40));
+                4, 40));
         line2.deliverResources(ResourceFactory.createBulkMPResource(3000, 3, 3,
-                3, 3));
+                3));
         line3.deliverResources(ResourceFactory.createBulkMPResource(3000, 5, 5,
-                5, 5));
+                5));
         line4.deliverResources(ResourceFactory.createBulkMPResource(3000, 4, 3,
-                3, 4, 40));
+                4, 40));
         line5.deliverResources(ResourceFactory.createBulkMPResource(3000, 5, 5,
-                5, 5));
+                5));
         line6.deliverResources(ResourceFactory.createBulkMPResource(3000, 4, 3,
-                3, 4, 40));
+                4, 40));
 
         Site site1 = new SiteImpl(line1, line2);
         Site site2 = new SiteImpl(line3, line4);
@@ -161,7 +173,7 @@ public class CopyOfCPTSO_DiffGenWAgg3Sites {
         SteeringSignal ss;
         ss = new RandomTSO(-700, 300, s.getRandom());
         if (curtail) {
-            tso = new CopperPlateTSO(17000, ss, site1, site2, site3);
+            tso = new CopperPlateTSO(22000, ss, site1, site2, site3);
         } else {
             tso = new CopperPlateTSO(25000, ss, site1, site2, site3);
         }

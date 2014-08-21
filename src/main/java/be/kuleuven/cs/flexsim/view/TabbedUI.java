@@ -23,11 +23,9 @@ public class TabbedUI extends JTabbedPane {
     public void draw() {
         final JTabbedPane tabbedPane = new JTabbedPane();
         for (Tabbable p : views) {
-
             tabbedPane.addTab(p.getViewTitle(), null, p.getPanel(),
                     "Shows the " + p.getViewTitle() + " pane.");
         }
-
         final JFrame frame = new JFrame("[=] FlexSim Graphs [=]");
         frame.setContentPane(tabbedPane);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
