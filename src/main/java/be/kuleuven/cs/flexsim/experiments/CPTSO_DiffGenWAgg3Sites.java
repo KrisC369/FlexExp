@@ -99,7 +99,7 @@ public class CPTSO_DiffGenWAgg3Sites {
 
     public CPTSO_DiffGenWAgg3Sites(boolean curtail) {
         this.curtail = curtail;
-        s = Simulator.createSimulator(5200);
+        s = Simulator.createSimulator(6200);
         // p = ProductionLine.createStaticCurtailableLayout();
         graphs = new ArrayList<>();
         pls = Lists.newArrayList();
