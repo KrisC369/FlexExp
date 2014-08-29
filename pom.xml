@@ -93,7 +93,7 @@
                 <configuration>
 					<archive>
 						<manifest>
-							<mainClass>be.kuleuven.cs.flexsim.experiments.CPTSO_DiffGenWAgg3Sites</mainClass>
+							<mainClass>be.kuleuven.cs.flexsim.example.ExampleScenario</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
