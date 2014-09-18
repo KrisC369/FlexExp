@@ -56,10 +56,8 @@ public class BigScenExp {
     }
 
     private ProductionLine buildLine() {
-        return new ProductionLine.ProductionLineBuilder().addShifted(14)
-                .addShifted(14).addShifted(4)
-                .addMultiCapExponentialConsuming(4, 125).addShifted(14)
-                .addShifted(14).addShifted(10).build();
+        return new ProductionLine.ProductionLineBuilder().addShifted(14).addShifted(14).addShifted(4)
+                .addMultiCapExponentialConsuming(4, 125).addShifted(14).addShifted(14).addShifted(10).build();
         // return new ProductionLine.ProductionLineBuilder()
         // .addMultiCapExponentialConsuming(1, 50).build();
     }
@@ -81,8 +79,7 @@ public class BigScenExp {
         // p.deliverResources(ResourceFactory.createBulkMPResource(60,0, 3, 1));
         // p.deliverResources(ResourceFactory.createBulkMPResource(60,0, 2, 3,
         // 2));
-        p.deliverResources(ResourceFactory.createBulkMPResource(500000, 0, 2,
-                2, 2, 2000));
+        p.deliverResources(ResourceFactory.createBulkMPResource(500000, 0, 2, 2, 2, 2000));
         // p.deliverResources(ResourceFactory.createBulkMPResource(10000, 0,
         // 1000));
     }
