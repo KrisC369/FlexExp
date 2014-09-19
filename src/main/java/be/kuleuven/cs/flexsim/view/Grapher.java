@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.naming.directory.NoSuchAttributeException;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -14,10 +16,12 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
+import org.slf4j.LoggerFactory;
 
+import be.kuleuven.cs.flexsim.event.Event;
 import be.kuleuven.cs.flexsim.simulation.InstrumentationComponent;
 import be.kuleuven.cs.flexsim.simulation.SimulationContext;
-import be.kuleuven.cs.gridlock.simulation.events.Event;
+import be.kuleuven.cs.flexsim.simulation.Simulator;
 
 import com.google.common.eventbus.Subscribe;
 
@@ -46,12 +50,18 @@ public abstract class Grapher extends ApplicationFrame implements
     @Subscribe
     public void recordReport(Event e) {
         if (e.getType().contains("report")) {
-            record(e);
+            try {
+                record(e);
+            } catch (NoSuchAttributeException e1) {
+                e1.printStackTrace();
+                LoggerFactory
+                        .getLogger(Simulator.class)
+                        .error("Some recorder tried to pull attribute that wasn't in event. Check consistently before accessing.");
+            }
         }
-
     }
 
-    protected abstract void record(Event e);
+    protected abstract void record(Event e) throws NoSuchAttributeException;
 
     protected void addRecord(String title, long x, long y) {
         if (!titlemap.containsKey(title)) {
@@ -113,7 +123,7 @@ public abstract class Grapher extends ApplicationFrame implements
             super(STEPCONS);
         }
 
-        protected void record(Event e) {
+        protected void record(Event e) throws NoSuchAttributeException {
             int t = e.getAttribute("time", Integer.class);
             for (Entry<String, Object> es : e.getAttributes().entrySet()) {
                 if (es.getKey().contains("totalLaststepE")) {
@@ -131,7 +141,7 @@ public abstract class Grapher extends ApplicationFrame implements
             super(STEPCONS);
         }
 
-        protected void record(Event e) {
+        protected void record(Event e) throws NoSuchAttributeException {
             int t = e.getAttribute("time", Integer.class);
             for (Entry<String, Object> es : e.getAttributes().entrySet()) {
                 if (es.getKey().contains("totalTotalE")) {
@@ -149,7 +159,7 @@ public abstract class Grapher extends ApplicationFrame implements
             super(STEPCONS);
         }
 
-        protected void record(Event e) {
+        protected void record(Event e) throws NoSuchAttributeException {
             int t = e.getAttribute("time", Integer.class);
             for (Entry<String, Object> es : e.getAttributes().entrySet()) {
                 if (es.getKey().contains("totalProfitM")) {
@@ -169,7 +179,7 @@ public abstract class Grapher extends ApplicationFrame implements
         }
 
         @Override
-        protected void record(Event e) {
+        protected void record(Event e) throws NoSuchAttributeException {
             int t = e.getAttribute("time", Integer.class);
             for (Entry<String, Object> es : e.getAttributes().entrySet()) {
                 if (es.getKey().contains("buffer")) {
