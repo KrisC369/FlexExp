@@ -12,6 +12,7 @@ import be.kuleuven.cs.flexsim.domain.site.Site;
 import be.kuleuven.cs.flexsim.domain.site.SiteImpl;
 import be.kuleuven.cs.flexsim.domain.tso.CopperPlateTSO;
 import be.kuleuven.cs.flexsim.domain.tso.RandomTSO;
+import be.kuleuven.cs.flexsim.io.CSVWriter;
 import be.kuleuven.cs.flexsim.simulation.Simulator;
 import be.kuleuven.cs.flexsim.view.GraphAggregatorView;
 import be.kuleuven.cs.flexsim.view.Grapher;
@@ -54,7 +55,7 @@ public class ExampleScenario {
 
         agg3.print();
         agg4.print();
-
+        new CSVWriter("exampleOut.csv").writeCSV(tsot);
     }
 
     private static void drawUI(Tabbable... agg1) {

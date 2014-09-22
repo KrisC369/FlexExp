@@ -1,4 +1,4 @@
-package be.kuleuven.cs.flexsim.experiments;
+package be.kuleuven.cs.flexsim.example;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,12 +30,12 @@ import com.google.common.collect.Lists;
  * @author Kristof Coninx (kristof.coninx AT cs.kuleuven.be)
  *
  */
-public class AggVsNoAggBalancingExp {
+public class ScratchpadExp {
 
     public static void main(String[] args) {
-        List<AggVsNoAggBalancingExp> app = Lists.newArrayList();
-        app.add(new AggVsNoAggBalancingExp());
-        app.add(new AggVsNoAggBalancingExp());
+        List<ScratchpadExp> app = Lists.newArrayList();
+        app.add(new ScratchpadExp());
+        app.add(new ScratchpadExp());
         GraphAggregatorView agg1 = new GraphAggregatorView();
         GraphAggregatorView agg2 = new GraphAggregatorView();
         GraphAggregatorView agg3 = new GraphAggregatorView();
@@ -82,7 +82,7 @@ public class AggVsNoAggBalancingExp {
     private List<Grapher> graphs;
     private List<FinanceTrackerImpl> ft;
 
-    public AggVsNoAggBalancingExp() {
+    public ScratchpadExp() {
         s = Simulator.createSimulator(2700);
         p = Lists.newArrayList();
         sites = Lists.newArrayList();
@@ -160,12 +160,12 @@ public class AggVsNoAggBalancingExp {
         int count = 0;
         for (ProductionLine pl : p) {
             if (count++ % 3 == 0) {
-                pl.deliverResources(ResourceFactory.createBulkMPResource(2000,
-                        3, 5, 3, 42));
+                pl.deliverResources(ResourceFactory.createBulkMPResource(700,
+                        30, 50, 30, 420));
             } else {
 
-                pl.deliverResources(ResourceFactory.createBulkMPResource(2000,
-                        4, 3, 4, 40));
+                pl.deliverResources(ResourceFactory.createBulkMPResource(700,
+                        40, 30, 40, 400));
             }
 
         }
@@ -176,9 +176,9 @@ public class AggVsNoAggBalancingExp {
         ft.add(FinanceTrackerImpl.createDefault(sites.get(3)));
         // Add the tso with the random signal for the aggregator and the sites
         // connected to it.
-        tso = new CopperPlateTSO(29000, new RandomTSO(-20, 15, s.getRandom()),
+        tso = new CopperPlateTSO(29000, new RandomTSO(-2, 2, s.getRandom()),
                 sites.toArray(new Site[4]));
-        this.agg = new AggregatorImpl(tso, 2);
+        this.agg = new AggregatorImpl(tso, 15);
 
         // Register the tso (with subsimcompoments recursively added. And add
         // the aggregator and finance trackers.

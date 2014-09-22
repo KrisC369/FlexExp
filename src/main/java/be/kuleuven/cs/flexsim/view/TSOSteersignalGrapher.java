@@ -30,15 +30,13 @@ public class TSOSteersignalGrapher implements Tabbable, Chartable,
     public TSOSteersignalGrapher(CopperPlateTSO tso) {
         this.data = new XYSeries(NAME);
         this.xcount = 0;
-        tso.addNewSteerValueListener(new Listener<Integer>() {
-
+        tso.addNewBalanceValueListener(new Listener<Integer>() {
             @Override
             public void eventOccurred(Integer arg) {
                 data.add(xcount, arg);
                 increaseX(15);
                 notifyObs();
             }
-
         });
     }
 
