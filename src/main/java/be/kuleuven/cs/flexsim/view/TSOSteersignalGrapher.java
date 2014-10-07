@@ -12,7 +12,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-import be.kuleuven.cs.flexsim.domain.tso.CopperPlateTSO;
+import be.kuleuven.cs.flexsim.domain.energy.tso.BalancingSignal;
 import be.kuleuven.cs.flexsim.domain.util.listener.Listener;
 import be.kuleuven.cs.flexsim.domain.util.listener.MultiplexListener;
 import be.kuleuven.cs.flexsim.domain.util.listener.NoopListener;
@@ -27,7 +27,7 @@ public class TSOSteersignalGrapher implements Tabbable, Chartable,
     private final String NAME = "TSO Balance";
     private Listener<Object> ob = NoopListener.INSTANCE;
 
-    public TSOSteersignalGrapher(CopperPlateTSO tso) {
+    public TSOSteersignalGrapher(BalancingSignal tso) {
         this.data = new XYSeries(NAME);
         this.xcount = 0;
         tso.addNewBalanceValueListener(new Listener<Integer>() {

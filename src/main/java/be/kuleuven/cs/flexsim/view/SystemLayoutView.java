@@ -17,9 +17,9 @@ import javax.swing.JPanel;
 
 import org.apache.commons.collections15.Transformer;
 
+import be.kuleuven.cs.flexsim.domain.energy.tso.BalancingSignal;
 import be.kuleuven.cs.flexsim.domain.process.ProductionLine;
 import be.kuleuven.cs.flexsim.domain.site.Site;
-import be.kuleuven.cs.flexsim.domain.tso.SteeringSignal;
 import be.kuleuven.cs.flexsim.domain.workstation.CurtailableWorkstation;
 import be.kuleuven.cs.flexsim.domain.workstation.DualModeWorkstation;
 import be.kuleuven.cs.flexsim.domain.workstation.Workstation;
@@ -131,7 +131,7 @@ public class SystemLayoutView extends JApplet implements Tabbable {
                         if (arg0 instanceof Site) {
                             return "Site";
                         }
-                        if (arg0 instanceof SteeringSignal) {
+                        if (arg0 instanceof BalancingSignal) {
                             return "TSO";
                         }
                         if (arg0 instanceof ProductionLine) {
@@ -165,7 +165,7 @@ public class SystemLayoutView extends JApplet implements Tabbable {
                         if (arg0 instanceof Site) {
                             return Color.YELLOW;
                         }
-                        if (arg0 instanceof SteeringSignal) {
+                        if (arg0 instanceof BalancingSignal) {
                             return Color.MAGENTA;
                         }
                         if (arg0 instanceof ProductionLine) {

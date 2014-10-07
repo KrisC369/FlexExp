@@ -63,7 +63,7 @@ public abstract class Grapher extends ApplicationFrame implements
 
     protected abstract void record(Event e) throws NoSuchAttributeException;
 
-    protected void addRecord(String title, long x, long y) {
+    protected void addRecord(String title, long x, double y) {
         if (!titlemap.containsKey(title)) {
             titlemap.put(title, series.size());
         }
@@ -127,7 +127,7 @@ public abstract class Grapher extends ApplicationFrame implements
             int t = e.getAttribute("time", Integer.class);
             for (Entry<String, Object> es : e.getAttributes().entrySet()) {
                 if (es.getKey().contains("totalLaststepE")) {
-                    long y = e.getAttribute(es.getKey(), Integer.class);
+                    double y = e.getAttribute(es.getKey(), Double.class);
                     addRecord(es.getKey(), t, y);
                 }
             }
@@ -145,7 +145,7 @@ public abstract class Grapher extends ApplicationFrame implements
             int t = e.getAttribute("time", Integer.class);
             for (Entry<String, Object> es : e.getAttributes().entrySet()) {
                 if (es.getKey().contains("totalTotalE")) {
-                    long y = e.getAttribute(es.getKey(), Integer.class);
+                    double y = e.getAttribute(es.getKey(), Double.class);
                     addRecord(es.getKey(), t, y);
                 }
             }
@@ -163,7 +163,7 @@ public abstract class Grapher extends ApplicationFrame implements
             int t = e.getAttribute("time", Integer.class);
             for (Entry<String, Object> es : e.getAttributes().entrySet()) {
                 if (es.getKey().contains("totalProfitM")) {
-                    long y = e.getAttribute(es.getKey(), Integer.class);
+                    double y = e.getAttribute(es.getKey(), Double.class);
                     addRecord(es.getKey(), t, y);
                 }
             }

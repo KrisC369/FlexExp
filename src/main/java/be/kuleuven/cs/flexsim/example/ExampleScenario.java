@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import be.kuleuven.cs.flexsim.domain.aggregation.AggregatorImpl;
+import be.kuleuven.cs.flexsim.domain.energy.tso.SimpleTSO;
+import be.kuleuven.cs.flexsim.domain.energy.tso.RandomTSO;
 import be.kuleuven.cs.flexsim.domain.finance.FinanceTrackerImpl;
 import be.kuleuven.cs.flexsim.domain.process.ProductionLine;
 import be.kuleuven.cs.flexsim.domain.process.ProductionLine.ProductionLineBuilder;
 import be.kuleuven.cs.flexsim.domain.resource.ResourceFactory;
 import be.kuleuven.cs.flexsim.domain.site.Site;
 import be.kuleuven.cs.flexsim.domain.site.SiteImpl;
-import be.kuleuven.cs.flexsim.domain.tso.CopperPlateTSO;
-import be.kuleuven.cs.flexsim.domain.tso.RandomTSO;
 import be.kuleuven.cs.flexsim.io.CSVWriter;
 import be.kuleuven.cs.flexsim.simulation.Simulator;
 import be.kuleuven.cs.flexsim.view.GraphAggregatorView;
@@ -66,7 +66,7 @@ public class ExampleScenario {
     private List<ProductionLine> p;
     private List<Site> sites;
     private AggregatorImpl agg;
-    private CopperPlateTSO tso;
+    private SimpleTSO tso;
     private List<Grapher> graphs;
     private List<FinanceTrackerImpl> ft;
 
@@ -127,7 +127,7 @@ public class ExampleScenario {
         ft.add(FinanceTrackerImpl.createDefault(sites.get(1)));
         // Add the tso with the random signal for the aggregator and the sites
         // connected to it.
-        tso = new CopperPlateTSO(14000, new RandomTSO(-1500, 1500,
+        tso = new SimpleTSO(14000, new RandomTSO(-1500, 1500,
                 s.getRandom()), sites.toArray(new Site[2]));
         this.agg = new AggregatorImpl(tso, 15);
 

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import be.kuleuven.cs.flexsim.domain.aggregation.AggregatorImpl;
+import be.kuleuven.cs.flexsim.domain.energy.tso.SimpleTSO;
+import be.kuleuven.cs.flexsim.domain.energy.tso.RandomTSO;
+import be.kuleuven.cs.flexsim.domain.energy.tso.BalancingSignal;
 import be.kuleuven.cs.flexsim.domain.finance.FinanceTracker;
 import be.kuleuven.cs.flexsim.domain.finance.FinanceTrackerImpl;
 import be.kuleuven.cs.flexsim.domain.process.ProductionLine;
@@ -11,9 +14,6 @@ import be.kuleuven.cs.flexsim.domain.process.ProductionLine.ProductionLineBuilde
 import be.kuleuven.cs.flexsim.domain.resource.ResourceFactory;
 import be.kuleuven.cs.flexsim.domain.site.Site;
 import be.kuleuven.cs.flexsim.domain.site.SiteImpl;
-import be.kuleuven.cs.flexsim.domain.tso.CopperPlateTSO;
-import be.kuleuven.cs.flexsim.domain.tso.RandomTSO;
-import be.kuleuven.cs.flexsim.domain.tso.SteeringSignal;
 import be.kuleuven.cs.flexsim.simulation.Simulator;
 import be.kuleuven.cs.flexsim.view.GraphAggregatorView;
 import be.kuleuven.cs.flexsim.view.Grapher;
@@ -75,7 +75,7 @@ public class CurtailOrNotExample {
     private List<Grapher> graphs;
     private FinanceTracker ft;
     private boolean curtail;
-    private CopperPlateTSO tso;
+    private SimpleTSO tso;
 
     public CurtailOrNotExample(boolean curtail) {
         this.curtail = curtail;
@@ -133,7 +133,7 @@ public class CurtailOrNotExample {
         // FinanceTrackerImpl t4 = FinanceTrackerImpl.createDefault(site2);
         // ft = FinanceTrackerImpl.createAggregate(t3, t4);
 
-        SteeringSignal tso;
+        BalancingSignal tso;
         if (curtail) {
             tso = new RandomTSO(-30, 70, s.getRandom());
         } else {

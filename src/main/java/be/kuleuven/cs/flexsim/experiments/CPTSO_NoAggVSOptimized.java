@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import be.kuleuven.cs.flexsim.domain.aggregation.AggregatorImpl;
+import be.kuleuven.cs.flexsim.domain.energy.tso.SimpleTSO;
+import be.kuleuven.cs.flexsim.domain.energy.tso.RandomTSO;
+import be.kuleuven.cs.flexsim.domain.energy.tso.BalancingSignal;
 import be.kuleuven.cs.flexsim.domain.finance.FinanceTracker;
 import be.kuleuven.cs.flexsim.domain.finance.FinanceTrackerImpl;
 import be.kuleuven.cs.flexsim.domain.process.ProductionLine;
@@ -11,9 +14,6 @@ import be.kuleuven.cs.flexsim.domain.process.ProductionLine.ProductionLineBuilde
 import be.kuleuven.cs.flexsim.domain.resource.ResourceFactory;
 import be.kuleuven.cs.flexsim.domain.site.Site;
 import be.kuleuven.cs.flexsim.domain.site.SiteImpl;
-import be.kuleuven.cs.flexsim.domain.tso.CopperPlateTSO;
-import be.kuleuven.cs.flexsim.domain.tso.RandomTSO;
-import be.kuleuven.cs.flexsim.domain.tso.SteeringSignal;
 import be.kuleuven.cs.flexsim.simulation.Simulator;
 import be.kuleuven.cs.flexsim.view.GraphAggregatorView;
 import be.kuleuven.cs.flexsim.view.Grapher;
@@ -77,7 +77,7 @@ public class CPTSO_NoAggVSOptimized {
     private List<FinanceTracker> fts;
     private List<Grapher> graphs;
     private boolean curtail;
-    private CopperPlateTSO tso;
+    private SimpleTSO tso;
     private Tabbable tsot;
 
     public CPTSO_NoAggVSOptimized(boolean curtail) {
@@ -138,14 +138,14 @@ public class CPTSO_NoAggVSOptimized {
         FinanceTrackerImpl t3 = FinanceTrackerImpl.createDefault(site1);
         FinanceTrackerImpl t4 = FinanceTrackerImpl.createDefault(site2);
 
-        SteeringSignal ss;
+        BalancingSignal ss;
         if (curtail) {
             ss = new RandomTSO(-700, 300, s.getRandom());
-            tso = new CopperPlateTSO(-10000, ss, site1, site2);
+            tso = new SimpleTSO(-10000, ss, site1, site2);
             agg = new AggregatorImpl(tso, 15);
         } else {
             ss = new RandomTSO(0, 1, s.getRandom());
-            tso = new CopperPlateTSO(-10000, ss);
+            tso = new SimpleTSO(-10000, ss);
             agg = new AggregatorImpl(ss, 15);
         }
         agg.registerClient(site1);

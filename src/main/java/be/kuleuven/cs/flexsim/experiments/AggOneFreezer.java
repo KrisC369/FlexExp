@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import be.kuleuven.cs.flexsim.domain.aggregation.AggregatorImpl;
+import be.kuleuven.cs.flexsim.domain.energy.tso.SimpleTSO;
+import be.kuleuven.cs.flexsim.domain.energy.tso.RandomTSO;
+import be.kuleuven.cs.flexsim.domain.energy.tso.BalancingSignal;
 import be.kuleuven.cs.flexsim.domain.finance.FinanceTracker;
 import be.kuleuven.cs.flexsim.domain.finance.FinanceTrackerImpl;
 import be.kuleuven.cs.flexsim.domain.process.ProductionLine;
@@ -11,9 +14,6 @@ import be.kuleuven.cs.flexsim.domain.process.ProductionLine.ProductionLineBuilde
 import be.kuleuven.cs.flexsim.domain.resource.ResourceFactory;
 import be.kuleuven.cs.flexsim.domain.site.Site;
 import be.kuleuven.cs.flexsim.domain.site.SiteImpl;
-import be.kuleuven.cs.flexsim.domain.tso.CopperPlateTSO;
-import be.kuleuven.cs.flexsim.domain.tso.RandomTSO;
-import be.kuleuven.cs.flexsim.domain.tso.SteeringSignal;
 import be.kuleuven.cs.flexsim.simulation.Simulator;
 import be.kuleuven.cs.flexsim.view.Chartable;
 import be.kuleuven.cs.flexsim.view.GraphAggregatorView;
@@ -77,7 +77,7 @@ public class AggOneFreezer {
     private List<FinanceTracker> fts;
     private List<Grapher> graphs;
     private boolean curtail;
-    private CopperPlateTSO tso;
+    private SimpleTSO tso;
 
     private Chartable tsot;
 
@@ -112,13 +112,13 @@ public class AggOneFreezer {
         Site site1 = new SiteImpl(line1);
         FinanceTrackerImpl t3 = FinanceTrackerImpl.createDefault(site1);
 
-        SteeringSignal ss;
+        BalancingSignal ss;
         if (curtail) {
             ss = new RandomTSO(-20, 20, s.getRandom());
-            tso = new CopperPlateTSO(1200, ss, site1);
+            tso = new SimpleTSO(1200, ss, site1);
         } else {
             ss = new RandomTSO(-0, 1, s.getRandom());
-            tso = new CopperPlateTSO(1200, ss, site1);
+            tso = new SimpleTSO(1200, ss, site1);
         }
         agg = new AggregatorImpl(tso, 15);
         agg.registerClient(site1);
