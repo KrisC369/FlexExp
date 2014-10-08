@@ -6,7 +6,7 @@ import java.util.List;
 import be.kuleuven.cs.flexsim.domain.aggregation.AggregatorImpl;
 import be.kuleuven.cs.flexsim.domain.energy.generation.ConstantOutputGenerator;
 import be.kuleuven.cs.flexsim.domain.energy.generation.EnergyProductionTrackable;
-import be.kuleuven.cs.flexsim.domain.energy.generation.RandomOutputGenerator;
+import be.kuleuven.cs.flexsim.domain.energy.generation.WeighedNormalRandomOutputGenerator;
 import be.kuleuven.cs.flexsim.domain.energy.tso.CopperplateTSO;
 import be.kuleuven.cs.flexsim.domain.finance.FinanceTrackerImpl;
 import be.kuleuven.cs.flexsim.domain.process.ProductionLine;
@@ -179,9 +179,10 @@ public class ScratchpadExp {
         // Add the tso with the random signal for the aggregator and the sites
         // connected to it.
         EnergyProductionTrackable p1 = new ConstantOutputGenerator(29000);
-        EnergyProductionTrackable p2 = new RandomOutputGenerator(-2, 2,
-                s.getRandom());
+        EnergyProductionTrackable p2 = new WeighedNormalRandomOutputGenerator(
+                -50000, 50000, 0.010);
         tso = new CopperplateTSO(sites.toArray(new Site[4]));
+        // tso = new CopperplateTSO();
         tso.registerProducer(p1);
         tso.registerProducer(p2);
         // tso = new SimpleTSO(29000, new RandomTSO(-2, 2, s.getRandom()),

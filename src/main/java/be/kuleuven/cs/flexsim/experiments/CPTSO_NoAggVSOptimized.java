@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import be.kuleuven.cs.flexsim.domain.aggregation.AggregatorImpl;
-import be.kuleuven.cs.flexsim.domain.energy.tso.SimpleTSO;
-import be.kuleuven.cs.flexsim.domain.energy.tso.RandomTSO;
-import be.kuleuven.cs.flexsim.domain.energy.tso.BalancingSignal;
+import be.kuleuven.cs.flexsim.domain.energy.generation.ConstantOutputGenerator;
+import be.kuleuven.cs.flexsim.domain.energy.generation.EnergyProductionTrackable;
+import be.kuleuven.cs.flexsim.domain.energy.generation.RandomOutputGenerator;
+import be.kuleuven.cs.flexsim.domain.energy.tso.CopperplateTSO;
 import be.kuleuven.cs.flexsim.domain.finance.FinanceTracker;
 import be.kuleuven.cs.flexsim.domain.finance.FinanceTrackerImpl;
 import be.kuleuven.cs.flexsim.domain.process.ProductionLine;
@@ -77,7 +78,7 @@ public class CPTSO_NoAggVSOptimized {
     private List<FinanceTracker> fts;
     private List<Grapher> graphs;
     private boolean curtail;
-    private SimpleTSO tso;
+    private CopperplateTSO tso;
     private Tabbable tsot;
 
     public CPTSO_NoAggVSOptimized(boolean curtail) {
@@ -138,16 +139,19 @@ public class CPTSO_NoAggVSOptimized {
         FinanceTrackerImpl t3 = FinanceTrackerImpl.createDefault(site1);
         FinanceTrackerImpl t4 = FinanceTrackerImpl.createDefault(site2);
 
-        BalancingSignal ss;
+        EnergyProductionTrackable p1 = new ConstantOutputGenerator(-10000);
         if (curtail) {
-            ss = new RandomTSO(-700, 300, s.getRandom());
-            tso = new SimpleTSO(-10000, ss, site1, site2);
-            agg = new AggregatorImpl(tso, 15);
+            EnergyProductionTrackable p2 = new RandomOutputGenerator(-700, 300);
+            tso = new CopperplateTSO(site1, site2);
+            tso.registerProducer(p1);
+            tso.registerProducer(p2);
         } else {
-            ss = new RandomTSO(0, 1, s.getRandom());
-            tso = new SimpleTSO(-10000, ss);
-            agg = new AggregatorImpl(ss, 15);
+            EnergyProductionTrackable p2 = new RandomOutputGenerator(-0, 1);
+            tso = new CopperplateTSO();
+            tso.registerProducer(p1);
+            tso.registerProducer(p2);
         }
+        agg = new AggregatorImpl(tso, 15);
         agg.registerClient(site1);
         agg.registerClient(site2);
         tsot = new TSOSteersignalGrapher(tso);

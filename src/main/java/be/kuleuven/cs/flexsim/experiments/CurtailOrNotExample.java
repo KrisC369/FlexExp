@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import be.kuleuven.cs.flexsim.domain.aggregation.AggregatorImpl;
-import be.kuleuven.cs.flexsim.domain.energy.tso.SimpleTSO;
-import be.kuleuven.cs.flexsim.domain.energy.tso.RandomTSO;
 import be.kuleuven.cs.flexsim.domain.energy.tso.BalancingSignal;
+import be.kuleuven.cs.flexsim.domain.energy.tso.RandomTSO;
 import be.kuleuven.cs.flexsim.domain.finance.FinanceTracker;
 import be.kuleuven.cs.flexsim.domain.finance.FinanceTrackerImpl;
 import be.kuleuven.cs.flexsim.domain.process.ProductionLine;
@@ -75,7 +74,7 @@ public class CurtailOrNotExample {
     private List<Grapher> graphs;
     private FinanceTracker ft;
     private boolean curtail;
-    private SimpleTSO tso;
+    private BalancingSignal tso;
 
     public CurtailOrNotExample(boolean curtail) {
         this.curtail = curtail;

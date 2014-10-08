@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import be.kuleuven.cs.flexsim.domain.aggregation.AggregatorImpl;
-import be.kuleuven.cs.flexsim.domain.energy.tso.SimpleTSO;
-import be.kuleuven.cs.flexsim.domain.energy.tso.RandomTSO;
-import be.kuleuven.cs.flexsim.domain.energy.tso.BalancingSignal;
+import be.kuleuven.cs.flexsim.domain.energy.generation.ConstantOutputGenerator;
+import be.kuleuven.cs.flexsim.domain.energy.generation.EnergyProductionTrackable;
+import be.kuleuven.cs.flexsim.domain.energy.generation.RandomOutputGenerator;
+import be.kuleuven.cs.flexsim.domain.energy.tso.CopperplateTSO;
 import be.kuleuven.cs.flexsim.domain.finance.FinanceTracker;
 import be.kuleuven.cs.flexsim.domain.finance.FinanceTrackerImpl;
 import be.kuleuven.cs.flexsim.domain.process.ProductionLine;
@@ -79,7 +80,7 @@ public class CPTSO_DiffGenWAgg {
     private List<FinanceTracker> fts;
     private List<Grapher> graphs;
     private boolean curtail;
-    private SimpleTSO tso;
+    private CopperplateTSO tso;
 
     private Chartable tsot;
 
@@ -140,13 +141,17 @@ public class CPTSO_DiffGenWAgg {
         FinanceTrackerImpl t3 = FinanceTrackerImpl.createDefault(site1);
         FinanceTrackerImpl t4 = FinanceTrackerImpl.createDefault(site2);
 
-        BalancingSignal ss;
-        ss = new RandomTSO(-700, 300, s.getRandom());
+        EnergyProductionTrackable p1;
         if (curtail) {
-            tso = new SimpleTSO(17000, ss, site1, site2);
+            p1 = new ConstantOutputGenerator(17000);
         } else {
-            tso = new SimpleTSO(25000, ss, site1, site2);
+            p1 = new ConstantOutputGenerator(25000);
+
         }
+        EnergyProductionTrackable p2 = new RandomOutputGenerator(-700, 300);
+        tso = new CopperplateTSO(site1, site2);
+        tso.registerProducer(p1);
+        tso.registerProducer(p2);
         agg = new AggregatorImpl(tso, 15);
         agg.registerClient(site1);
         agg.registerClient(site2);

@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import be.kuleuven.cs.flexsim.domain.aggregation.AggregatorImpl;
-import be.kuleuven.cs.flexsim.domain.energy.tso.SimpleTSO;
-import be.kuleuven.cs.flexsim.domain.energy.tso.RandomTSO;
+import be.kuleuven.cs.flexsim.domain.energy.generation.ConstantOutputGenerator;
+import be.kuleuven.cs.flexsim.domain.energy.generation.EnergyProductionTrackable;
+import be.kuleuven.cs.flexsim.domain.energy.generation.RandomOutputGenerator;
 import be.kuleuven.cs.flexsim.domain.energy.tso.BalancingSignal;
+import be.kuleuven.cs.flexsim.domain.energy.tso.CopperplateTSO;
 import be.kuleuven.cs.flexsim.domain.finance.FinanceTracker;
 import be.kuleuven.cs.flexsim.domain.finance.FinanceTrackerImpl;
 import be.kuleuven.cs.flexsim.domain.process.ProductionLine;
@@ -77,7 +79,7 @@ public class AggOneFreezer {
     private List<FinanceTracker> fts;
     private List<Grapher> graphs;
     private boolean curtail;
-    private SimpleTSO tso;
+    private CopperplateTSO tso;
 
     private Chartable tsot;
 
@@ -114,11 +116,17 @@ public class AggOneFreezer {
 
         BalancingSignal ss;
         if (curtail) {
-            ss = new RandomTSO(-20, 20, s.getRandom());
-            tso = new SimpleTSO(1200, ss, site1);
+            EnergyProductionTrackable p1 = new ConstantOutputGenerator(1200);
+            EnergyProductionTrackable p2 = new RandomOutputGenerator(-20, 20);
+            tso = new CopperplateTSO(site1);
+            tso.registerProducer(p1);
+            tso.registerProducer(p2);
         } else {
-            ss = new RandomTSO(-0, 1, s.getRandom());
-            tso = new SimpleTSO(1200, ss, site1);
+            EnergyProductionTrackable p1 = new ConstantOutputGenerator(1200);
+            EnergyProductionTrackable p2 = new RandomOutputGenerator(-0, 1);
+            tso = new CopperplateTSO(site1);
+            tso.registerProducer(p1);
+            tso.registerProducer(p2);
         }
         agg = new AggregatorImpl(tso, 15);
         agg.registerClient(site1);
