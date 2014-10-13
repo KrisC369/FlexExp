@@ -1,5 +1,6 @@
 package be.kuleuven.cs.flexsim.view;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -19,28 +20,23 @@ import be.kuleuven.cs.flexsim.domain.util.listener.NoopListener;
 
 import com.google.common.collect.Lists;
 
-public class TSOSteersignalGrapher implements Tabbable, Chartable,
+public class BalanceDurationGrapher implements Tabbable, Chartable,
         RefreshTrigger {
 
     private XYSeries data;
-    private int xcount;
-    private final String NAME = "TSO Balance";
+    private final String NAME = "TSO Balance duration ";
     private Listener<Object> ob = NoopListener.INSTANCE;
+    private List<Integer> values;
     private final int xStep;
 
-    public TSOSteersignalGrapher(BalancingSignal tso) {
-        this(tso, 15);
-    }
-
-    public TSOSteersignalGrapher(BalancingSignal tso, final int xStep) {
+    public BalanceDurationGrapher(BalancingSignal tso, final int xStep) {
         this.data = new XYSeries(NAME);
-        this.xcount = 0;
+        this.values = Lists.newArrayList();
         this.xStep = xStep;
         tso.addNewBalanceValueListener(new Listener<Integer>() {
             @Override
             public void eventOccurred(Integer arg) {
-                data.add(xcount, arg);
-                increaseX(xStep);
+                values.add(Math.abs(arg));
                 notifyObs();
             }
         });
@@ -50,16 +46,19 @@ public class TSOSteersignalGrapher implements Tabbable, Chartable,
         ob.eventOccurred(this);
     }
 
-    private void increaseX(int amount) {
-        xcount += amount;
-    }
-
     @Override
     public JFreeChart createChart() {
-        final XYSeriesCollection data = new XYSeriesCollection();
-        data.addSeries(this.data);
+        final XYSeriesCollection dataColl = new XYSeriesCollection();
+        Collections.sort(values);
+        Collections.reverse(values);
+        int x = 0;
+        for (Integer i : values) {
+            this.data.add(x, i);
+            x += xStep;
+        }
+        dataColl.addSeries(this.data);
         return ChartFactory.createXYLineChart(NAME + "Graph", "time", NAME,
-                data, PlotOrientation.VERTICAL, true, true, false);
+                dataColl, PlotOrientation.VERTICAL, true, true, false);
     }
 
     @Override
@@ -85,7 +84,7 @@ public class TSOSteersignalGrapher implements Tabbable, Chartable,
 
     @Override
     public String getViewTitle() {
-        return "TSO-Balance";
+        return "TSO-B.Duration";
     }
 
     @Override

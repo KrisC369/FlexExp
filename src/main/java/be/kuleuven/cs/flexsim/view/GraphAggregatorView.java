@@ -146,4 +146,8 @@ public class GraphAggregatorView extends ApplicationFrame implements Tabbable {
         }
         return res;
     }
+
+    public List<Chartable> getChartable() {
+        return this.graphs;
+    }
 }
