@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import be.kuleuven.cs.flexsim.domain.aggregation.AggregationStrategyImpl;
-import be.kuleuven.cs.flexsim.domain.aggregation.AggregatorImpl;
+import be.kuleuven.cs.flexsim.domain.aggregation.IndependentAggregator;
 import be.kuleuven.cs.flexsim.domain.energy.generation.ConstantOutputGenerator;
 import be.kuleuven.cs.flexsim.domain.energy.generation.EnergyProductionTrackable;
 import be.kuleuven.cs.flexsim.domain.energy.generation.WeighedNormalRandomOutputGenerator;
@@ -85,7 +85,7 @@ public class ScratchpadSimSiteExp {
     private Simulator s;
     private List<ProductionLine> p;
     private List<Site> sites;
-    private AggregatorImpl agg;
+    private IndependentAggregator agg;
     private CopperplateTSO tso;
     private List<Grapher> graphs;
     private List<FinanceTrackerImpl> ft;
@@ -134,7 +134,7 @@ public class ScratchpadSimSiteExp {
         tso.registerProducer(p2);
         // tso = new SimpleTSO(29000, new RandomTSO(-2, 2, s.getRandom()),
         // sites.toArray(new Site[4]));
-        this.agg = new AggregatorImpl(tso, AGGSTEPS,
+        this.agg = new IndependentAggregator(tso, AGGSTEPS,
                 AggregationStrategyImpl.MOVINGHORIZON);
 
         // Register the tso (with subsimcompoments recursively added. And add

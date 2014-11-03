@@ -3,7 +3,7 @@ package be.kuleuven.cs.flexsim.example;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.kuleuven.cs.flexsim.domain.aggregation.AggregatorImpl;
+import be.kuleuven.cs.flexsim.domain.aggregation.IndependentAggregator;
 import be.kuleuven.cs.flexsim.domain.energy.generation.ConstantOutputGenerator;
 import be.kuleuven.cs.flexsim.domain.energy.generation.EnergyProductionTrackable;
 import be.kuleuven.cs.flexsim.domain.energy.generation.NormalRandomOutputGenerator;
@@ -67,7 +67,7 @@ public class ExampleScenario {
     private Simulator s;
     private List<ProductionLine> p;
     private List<Site> sites;
-    private AggregatorImpl agg;
+    private IndependentAggregator agg;
     private CopperplateTSO tso;
     private List<Grapher> graphs;
     private List<FinanceTrackerImpl> ft;
@@ -139,7 +139,7 @@ public class ExampleScenario {
         tso.registerProducer(p1);
         tso.registerProducer(p2);
 
-        this.agg = new AggregatorImpl(tso, 15);
+        this.agg = new IndependentAggregator(tso, 15);
 
         // Register the tso (with subsimcompoments recursively added. And add
         // the aggregator and finance trackers.

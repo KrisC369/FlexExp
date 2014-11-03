@@ -3,7 +3,7 @@ package be.kuleuven.cs.flexsim.experiments;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.kuleuven.cs.flexsim.domain.aggregation.AggregatorImpl;
+import be.kuleuven.cs.flexsim.domain.aggregation.IndependentAggregator;
 import be.kuleuven.cs.flexsim.domain.energy.generation.ConstantOutputGenerator;
 import be.kuleuven.cs.flexsim.domain.energy.generation.EnergyProductionTrackable;
 import be.kuleuven.cs.flexsim.domain.energy.generation.RandomOutputGenerator;
@@ -72,7 +72,7 @@ public class CPTSO_NoAggVSOptimized {
     }
 
     private Simulator s;
-    private AggregatorImpl agg;
+    private IndependentAggregator agg;
     private List<Site> sites;
     private List<ProductionLine> pls;
     private List<FinanceTracker> fts;
@@ -151,7 +151,7 @@ public class CPTSO_NoAggVSOptimized {
             tso.registerProducer(p1);
             tso.registerProducer(p2);
         }
-        agg = new AggregatorImpl(tso, 15);
+        agg = new IndependentAggregator(tso, 15);
         agg.registerClient(site1);
         agg.registerClient(site2);
         tsot = new TSOSteersignalGrapher(tso);
