@@ -112,9 +112,9 @@ public class NoAgg {
         // Deliver resources to these lines.
         // Add finance trackers keeping track of profit and consumptions.
         ft.add((FinanceTrackerImpl) FinanceTrackerImpl
-                .createBalancingFeeTracker((sites.get(0))));
+                .createBalancingFeeTracker((sites.get(0)), 30000));
         ft.add((FinanceTrackerImpl) FinanceTrackerImpl
-                .createBalancingFeeTracker(sites.get(1)));
+                .createBalancingFeeTracker(sites.get(1), 30000));
         // Add the tso with the random signal for the aggregator and the sites
         // connected to it.
         EnergyProductionTrackable p1 = new ConstantOutputGenerator(1600);
