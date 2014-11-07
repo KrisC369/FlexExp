@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import be.kuleuven.cs.flexsim.domain.aggregation.AggregationStrategyImpl;
-import be.kuleuven.cs.flexsim.domain.aggregation.ReactiveMechanismAggregator;
+import be.kuleuven.cs.flexsim.domain.aggregation.IndependentAggregator;
 import be.kuleuven.cs.flexsim.domain.energy.generation.ConstantOutputGenerator;
 import be.kuleuven.cs.flexsim.domain.energy.generation.EnergyProductionTrackable;
 import be.kuleuven.cs.flexsim.domain.energy.generation.WeighedNormalRandomOutputGenerator;
-import be.kuleuven.cs.flexsim.domain.energy.tso.BalancingTSO;
+import be.kuleuven.cs.flexsim.domain.energy.tso.CopperplateTSO;
 import be.kuleuven.cs.flexsim.domain.finance.FinanceTrackerImpl;
 import be.kuleuven.cs.flexsim.domain.process.ProductionLine;
 import be.kuleuven.cs.flexsim.domain.process.ProductionLine.ProductionLineBuilder;
@@ -31,12 +31,12 @@ import com.google.common.collect.Lists;
  * @author Kristof Coninx (kristof.coninx AT cs.kuleuven.be)
  *
  */
-public class CopyOfScratchpadExp {
+public class AnotherCopyOfCopyOfScratchpadExp {
     private static final int AGGSTEPS = 15;
 
     public static void main(String[] args) {
-        List<CopyOfScratchpadExp> app = Lists.newArrayList();
-        app.add(new CopyOfScratchpadExp());
+        List<AnotherCopyOfCopyOfScratchpadExp> app = Lists.newArrayList();
+        app.add(new AnotherCopyOfCopyOfScratchpadExp());
         GraphAggregatorView agg1 = new GraphAggregatorView();
         GraphAggregatorView agg2 = new GraphAggregatorView();
         GraphAggregatorView agg3 = new GraphAggregatorView();
@@ -69,13 +69,13 @@ public class CopyOfScratchpadExp {
     private Simulator s;
     private List<ProductionLine> p;
     private List<Site> sites;
-    private ReactiveMechanismAggregator agg;
-    private BalancingTSO tso;
+    private IndependentAggregator agg;
+    private CopperplateTSO tso;
     private List<Grapher> graphs;
     private List<FinanceTrackerImpl> ft;
 
-    public CopyOfScratchpadExp() {
-        s = Simulator.createSimulator(1500);
+    public AnotherCopyOfCopyOfScratchpadExp() {
+        s = Simulator.createSimulator(1000);
         p = Lists.newArrayList();
         sites = Lists.newArrayList();
         graphs = new ArrayList<>();
@@ -127,10 +127,10 @@ public class CopyOfScratchpadExp {
         EnergyProductionTrackable p1 = new WeighedNormalRandomOutputGenerator(
                 -1000, 1000);
         EnergyProductionTrackable p2 = new ConstantOutputGenerator(20000);
-        tso = new BalancingTSO(sites.get(0), sites.get(1));
+        tso = new CopperplateTSO(sites.get(0), sites.get(1));
         tso.registerProducer(p1);
         tso.registerProducer(p2);
-        agg = new ReactiveMechanismAggregator(tso,
+        agg = new IndependentAggregator(tso, 1,
                 AggregationStrategyImpl.CARTESIANPRODUCT);
         agg.registerClient(sites.get(0));
         agg.registerClient(sites.get(1));
