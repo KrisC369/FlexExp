@@ -109,12 +109,12 @@ public class DoubleAggScratchpadSimSiteExp {
         // Add productio lines
         // Build sites containing production lines.
 
-        sites.add(new SiteSimulation(7000, 3000, 10000, 6));
-        sites.add(new SiteSimulation(3000, 3000, 5000, 6));
-        sites.add(new SiteSimulation(700, 800, 1000, 5));
-        sites.add(new SiteSimulation(500, 800, 1000, 6));
-        sites.add(new SiteSimulation(200, 1500, 2000, 3));
-        sites.add(new SiteSimulation(500, 800, 1000, 6));
+        sites.add(SiteSimulation.createDefault(7000, 3000, 10000, 6));
+        sites.add(SiteSimulation.createDefault(3000, 3000, 5000, 6));
+        sites.add(SiteSimulation.createDefault(700, 800, 1000, 5));
+        sites.add(SiteSimulation.createDefault(500, 800, 1000, 6));
+        sites.add(SiteSimulation.createDefault(200, 1500, 2000, 3));
+        sites.add(SiteSimulation.createDefault(500, 800, 1000, 6));
 
         // Deliver resources to these lines.
         // Add finance trackers keeping track of profit and consumptions.

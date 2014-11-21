@@ -13,8 +13,13 @@ import be.kuleuven.cs.flexsim.domain.finance.FinanceTrackerImpl;
 import be.kuleuven.cs.flexsim.domain.site.Site;
 import be.kuleuven.cs.flexsim.domain.site.SiteSimulation;
 import be.kuleuven.cs.flexsim.simulation.Simulator;
+import be.kuleuven.cs.flexsim.view.BalanceDurationGrapher;
 import be.kuleuven.cs.flexsim.view.GraphAggregatorView;
 import be.kuleuven.cs.flexsim.view.Grapher;
+import be.kuleuven.cs.flexsim.view.SystemLayoutView;
+import be.kuleuven.cs.flexsim.view.TSOSteersignalGrapher;
+import be.kuleuven.cs.flexsim.view.Tabbable;
+import be.kuleuven.cs.flexsim.view.TabbedUI;
 
 import com.google.common.collect.Lists;
 
@@ -26,6 +31,48 @@ import com.google.common.collect.Lists;
  */
 public class Game1_1 implements GameInstance {
     private static final int AGGSTEPS = 1;
+
+    public static void main(String[] args) {
+        List<Game1_1> app = Lists.newArrayList();
+        app.add(new Game1_1(1200));
+        app.add(new Game1_1(1200));
+        GraphAggregatorView agg1 = new GraphAggregatorView();
+        GraphAggregatorView agg2 = new GraphAggregatorView();
+        GraphAggregatorView agg3 = new GraphAggregatorView();
+        GraphAggregatorView agg4 = new GraphAggregatorView();
+        GraphAggregatorView agg5 = new GraphAggregatorView();
+        GraphAggregatorView agg6 = new GraphAggregatorView();
+
+        app.get(0).addGrapher(agg1, new Grapher.BufferLevelGrapher());
+        app.get(0).addGrapher(agg2, new Grapher.StepConsumptionGrapher());
+        app.get(0).addGrapher(agg3, new Grapher.TotalComsumptionGrapher());
+        app.get(0).addGrapher(agg4, new Grapher.TotalProfitGrapher());
+
+        app.get(1).addGrapher(agg1, new Grapher.BufferLevelGrapher());
+        app.get(1).addGrapher(agg2, new Grapher.StepConsumptionGrapher());
+        app.get(1).addGrapher(agg3, new Grapher.TotalComsumptionGrapher());
+        app.get(1).addGrapher(agg4, new Grapher.TotalProfitGrapher());
+
+        app.get(0).init();
+        app.get(1).init();
+        // Attach steersignal grapher before starting sim.
+        agg5.addGrapher(new TSOSteersignalGrapher(app.get(0).tso, AGGSTEPS));
+        agg5.addGrapher(new TSOSteersignalGrapher(app.get(1).tso, AGGSTEPS));
+        agg6.addGrapher(new BalanceDurationGrapher(app.get(0).tso, AGGSTEPS));
+        agg6.addGrapher(new BalanceDurationGrapher(app.get(1).tso, AGGSTEPS));
+        // tsot = new TSOSteersignalGrapher(app.tso);
+        app.get(0).start();
+        app.get(1).start();
+        drawUI(agg1, agg2, agg3, agg4, agg5, agg6,
+                new SystemLayoutView(app.get(0).s));
+
+        agg3.print();
+        agg4.print();
+    }
+
+    private static void drawUI(Tabbable... agg1) {
+        new TabbedUI(Lists.newArrayList(agg1)).draw();
+    }
 
     private Simulator s;
     private List<Site> sites;
@@ -53,8 +100,8 @@ public class Game1_1 implements GameInstance {
         // Add productio lines
         // Build sites containing production lines.
 
-        sites.add(new SiteSimulation(800, 500, 1000, 6));
-        sites.add(new SiteSimulation(800, 500, 1000, 6));
+        sites.add(SiteSimulation.createEquidistantFlex(800, 500, 1000, 24));
+        sites.add(SiteSimulation.createEquidistantFlex(800, 500, 1000, 24));
 
         // Deliver resources to these lines.
         // Add finance trackers keeping track of profit and consumptions.

@@ -13,26 +13,27 @@ import com.google.common.collect.Lists;
  * @author Kristof Coninx (kristof.coninx AT cs.kuleuven.be)
  *
  */
-public class GameRunner {
+public class GameRunner2A {
     private static final int AGGSTEPS = 1;
+    private static final int agentsPoolSize = 2;
 
     public static void main(String[] args) {
         MersenneTwister t = new MersenneTwister();
         List<GameInstance> app22_1 = Lists.newArrayList();
         for (int i = 0; i < 100; i++) {
-            app22_1.add(new Game2_0(t.nextInt(), true));
+            app22_1.add(new Game2_0(t.nextInt(), true, agentsPoolSize));
         }
 
         t = new MersenneTwister();
         List<GameInstance> app11 = Lists.newArrayList();
         for (int i = 0; i < 100; i++) {
-            app11.add(new Game2_0(t.nextInt(), true));
+            app11.add(new Game2_0(t.nextInt(), true, agentsPoolSize));
         }
 
         t = new MersenneTwister();
         List<GameInstance> app22_2 = Lists.newArrayList();
         for (int i = 0; i < 100; i++) {
-            app22_2.add(new Game2_0(t.nextInt(), false));
+            app22_2.add(new Game2_0(t.nextInt(), false, agentsPoolSize));
         }
 
         runSet(app22_1);

@@ -1,19 +1,17 @@
-package be.kuleuven.cs.flexsim.example;
+package be.kuleuven.cs.flexsim.games.manual;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import be.kuleuven.cs.flexsim.domain.aggregation.AggregationStrategyImpl;
-import be.kuleuven.cs.flexsim.domain.aggregation.IndependentAggregator;
+import be.kuleuven.cs.flexsim.domain.aggregation.ReactiveMechanismAggregator;
 import be.kuleuven.cs.flexsim.domain.energy.generation.ConstantOutputGenerator;
 import be.kuleuven.cs.flexsim.domain.energy.generation.EnergyProductionTrackable;
 import be.kuleuven.cs.flexsim.domain.energy.generation.WeighedNormalRandomOutputGenerator;
-import be.kuleuven.cs.flexsim.domain.energy.tso.CopperplateTSO;
+import be.kuleuven.cs.flexsim.domain.energy.tso.BalancingTSO;
 import be.kuleuven.cs.flexsim.domain.finance.FinanceTrackerImpl;
-import be.kuleuven.cs.flexsim.domain.process.ProductionLine;
 import be.kuleuven.cs.flexsim.domain.site.Site;
 import be.kuleuven.cs.flexsim.domain.site.SiteSimulation;
-import be.kuleuven.cs.flexsim.io.CSVWriter;
 import be.kuleuven.cs.flexsim.simulation.Simulator;
 import be.kuleuven.cs.flexsim.view.BalanceDurationGrapher;
 import be.kuleuven.cs.flexsim.view.GraphAggregatorView;
@@ -31,13 +29,13 @@ import com.google.common.collect.Lists;
  * @author Kristof Coninx (kristof.coninx AT cs.kuleuven.be)
  *
  */
-public class CopyOfScratchpadSimSiteExp {
-    private static final int AGGSTEPS = 15;
+public class GameX_X implements GameInstance {
+    private static final int AGGSTEPS = 1;
 
     public static void main(String[] args) {
-        List<CopyOfScratchpadSimSiteExp> app = Lists.newArrayList();
-        app.add(new CopyOfScratchpadSimSiteExp());
-        app.add(new CopyOfScratchpadSimSiteExp());
+        List<GameX_X> app = Lists.newArrayList();
+        app.add(new GameX_X(1200, 3, 1));
+        app.add(new GameX_X(1200, 1, 3));
         GraphAggregatorView agg1 = new GraphAggregatorView();
         GraphAggregatorView agg2 = new GraphAggregatorView();
         GraphAggregatorView agg3 = new GraphAggregatorView();
@@ -55,8 +53,8 @@ public class CopyOfScratchpadSimSiteExp {
         app.get(1).addGrapher(agg3, new Grapher.TotalComsumptionGrapher());
         app.get(1).addGrapher(agg4, new Grapher.TotalProfitGrapher());
 
-        app.get(0).init(true);
-        app.get(1).init(false);
+        app.get(0).init();
+        app.get(1).init();
         // Attach steersignal grapher before starting sim.
         agg5.addGrapher(new TSOSteersignalGrapher(app.get(0).tso, AGGSTEPS));
         agg5.addGrapher(new TSOSteersignalGrapher(app.get(1).tso, AGGSTEPS));
@@ -70,12 +68,6 @@ public class CopyOfScratchpadSimSiteExp {
 
         agg3.print();
         agg4.print();
-        new CSVWriter("ExpBal1.csv").writeCSV(agg5.getChartable().get(0));
-        new CSVWriter("ExpBal2.csv").writeCSV(agg5.getChartable().get(1));
-        new CSVWriter("ExpBalDuration.csv")
-                .writeCSV(agg6.getChartable().get(0));
-        new CSVWriter("ExpBalDuration2.csv").writeCSV(agg6.getChartable()
-                .get(1));
     }
 
     private static void drawUI(Tabbable... agg1) {
@@ -83,19 +75,22 @@ public class CopyOfScratchpadSimSiteExp {
     }
 
     private Simulator s;
-    private List<ProductionLine> p;
     private List<Site> sites;
-    private IndependentAggregator agg;
-    private CopperplateTSO tso;
+    private ReactiveMechanismAggregator agg1;
+    private ReactiveMechanismAggregator agg2;
+    private BalancingTSO tso;
     private List<Grapher> graphs;
     private List<FinanceTrackerImpl> ft;
+    private final int n1, n2;
+    private final int current = 800, min = 500, max = 1000;
 
-    public CopyOfScratchpadSimSiteExp() {
-        s = Simulator.createSimulator(2700);
-        p = Lists.newArrayList();
+    public GameX_X(int seed, int n1, int n2) {
+        s = Simulator.createSimulator(1000, seed);
         sites = Lists.newArrayList();
         graphs = new ArrayList<>();
         ft = Lists.newArrayList();
+        this.n1 = n1;
+        this.n2 = n2;
     }
 
     public void addGrapher(GraphAggregatorView agg, Grapher g) {
@@ -104,55 +99,67 @@ public class CopyOfScratchpadSimSiteExp {
         agg.addGrapher(g);
     }
 
-    public void init(boolean withagg) {
+    private int getNumberOfAgents() {
+        return n1 + n2;
+    }
+
+    @Override
+    public void init() {
         // Add productio lines
         // Build sites containing production lines.
-
-        sites.add(SiteSimulation.createDefault(7000, 3000, 10000, 6));
-        sites.add(SiteSimulation.createDefault(3000, 3000, 5000, 6));
-        sites.add(SiteSimulation.createDefault(700, 800, 1000, 5));
-        sites.add(SiteSimulation.createDefault(500, 800, 1000, 6));
-        sites.add(SiteSimulation.createDefault(200, 1500, 2000, 3));
-        sites.add(SiteSimulation.createDefault(500, 800, 1000, 6));
-
+        for (int i = 0; i < getNumberOfAgents(); i++) {
+            sites.add(SiteSimulation.createDefault(current, min, max, 12));
+        }
         // Deliver resources to these lines.
         // Add finance trackers keeping track of profit and consumptions.
-        ft.add(FinanceTrackerImpl.createDefault(sites.get(0)));
-        ft.add(FinanceTrackerImpl.createDefault(sites.get(1)));
-        ft.add(FinanceTrackerImpl.createDefault(sites.get(2)));
-        ft.add(FinanceTrackerImpl.createDefault(sites.get(3)));
-        ft.add(FinanceTrackerImpl.createDefault(sites.get(4)));
-        ft.add(FinanceTrackerImpl.createDefault(sites.get(5)));
+        for (int i = 0; i < getNumberOfAgents(); i++) {
+            ft.add((FinanceTrackerImpl) FinanceTrackerImpl
+                    .createBalancingFeeTracker((sites.get(i)), 30000));
+        }
         // Add the tso with the random signal for the aggregator and the sites
         // connected to it.
-        EnergyProductionTrackable p1 = new ConstantOutputGenerator(12100);
+        EnergyProductionTrackable p1 = new ConstantOutputGenerator(current
+                * getNumberOfAgents());
         EnergyProductionTrackable p2 = new WeighedNormalRandomOutputGenerator(
-                -50000, 50000, 0.010);
-        tso = new CopperplateTSO(sites.toArray(new Site[6]));
+                -1500, 1500, 0.010);
+        tso = new BalancingTSO(sites.toArray(new Site[getNumberOfAgents()]));
         // tso = new CopperplateTSO();
         tso.registerProducer(p1);
         tso.registerProducer(p2);
         // tso = new SimpleTSO(29000, new RandomTSO(-2, 2, s.getRandom()),
         // sites.toArray(new Site[4]));
-        this.agg = new IndependentAggregator(tso, 1,
+        this.agg1 = new ReactiveMechanismAggregator(tso,
+                AggregationStrategyImpl.CARTESIANPRODUCT);
+        this.agg2 = new ReactiveMechanismAggregator(tso,
                 AggregationStrategyImpl.MOVINGHORIZON);
-
-        // Register the tso (with subsimcomponents recursively added. And add
+        // Register the tso (with subsimcompoments recursively added. And add
         // the aggregator and finance trackers.
         s.register(tso);
-        s.register(this.agg);
+        s.register(this.agg1);
+        s.register(this.agg2);
         for (FinanceTrackerImpl f : ft) {
             s.register(f);
         }
         // Register the sites to the aggregator as clients
-        if (withagg) {
-            for (Site s : sites) {
-                agg.registerClient(s);
-            }
+        for (int i = 0; i < n1; i++) {
+            agg1.registerClient(sites.get(i));
+        }
+        for (int i = 0; i < n2; i++) {
+            agg2.registerClient(sites.get(n1 + i));
         }
     }
 
+    @Override
     public void start() {
         s.start();
+    }
+
+    @Override
+    public long[] getPayOffs() {
+        long[] toRet = new long[sites.size()];
+        for (int i = 0; i < toRet.length; i++) {
+            toRet[i] = (long) ft.get(i).getTotalProfit();
+        }
+        return toRet;
     }
 }

@@ -106,8 +106,8 @@ public class NoAgg {
         // Add productio lines
         // Build sites containing production lines.
 
-        sites.add(new SiteSimulation(800, 500, 1000, 6));
-        sites.add(new SiteSimulation(800, 500, 1000, 6));
+        sites.add(SiteSimulation.createEquidistantFlex(800, 500, 1000, 12));
+        sites.add(SiteSimulation.createEquidistantFlex(800, 500, 1000, 12));
 
         // Deliver resources to these lines.
         // Add finance trackers keeping track of profit and consumptions.
